@@ -23,7 +23,7 @@ class AuthViewController: UIViewController {
     let authtorLale: UILabel = {
         var lable = UILabel()
         
-        lable.text = "Fedorov V.S"
+        lable.text = "by Fedorov V.S"
         lable.translatesAutoresizingMaskIntoConstraints = false
         lable.textAlignment = .center
         lable.font = UIFont.systemFont(ofSize: 15, weight: .light)
@@ -55,10 +55,26 @@ class AuthViewController: UIViewController {
         
         return textField
     }()
+    let signInButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Sign In", for: .normal)
+        button.tintColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
+        button.isEnabled = false
+        button.backgroundColor = .darkGray
+
+        button.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        
+        return button
+    }()
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Скрытие клавиатуры
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboar))
         view.addGestureRecognizer(tap)
         
@@ -69,13 +85,14 @@ class AuthViewController: UIViewController {
         view.addSubview(nameProjectLale)
         view.addSubview(authtorLale)
         view.addSubview(phoneTextFiel)
+        view.addSubview(signInButton)
         
         activateConstraints()
     }
     
     private func formatPhoneNumber(number: String) -> String {
             let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
-            let mask = "+X (XXX) XXX-XXXX"
+            let mask = "+X (XXX) XXX-XX-XX"
             
             var result = ""
             var index = cleanPhoneNumber.startIndex
@@ -89,38 +106,61 @@ class AuthViewController: UIViewController {
             }
             return result
         }
+    
     private func activateConstraints(){
         NSLayoutConstraint.activate([
+            
             iconImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            iconImageView.topAnchor.constraint(equalTo: view.topAnchor,constant: 120),
+            iconImageView.bottomAnchor.constraint(equalTo: nameProjectLale.topAnchor,constant: -20),
             iconImageView.heightAnchor.constraint(equalToConstant: 150),
             iconImageView.widthAnchor.constraint(equalToConstant: 150),
             
-            nameProjectLale.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 40),
+            nameProjectLale.bottomAnchor.constraint(equalTo: authtorLale.topAnchor),
             nameProjectLale.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameProjectLale.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            authtorLale.topAnchor.constraint(equalTo: nameProjectLale.bottomAnchor),
+            authtorLale.bottomAnchor.constraint(equalTo: phoneTextFiel.topAnchor,constant: -40),
             authtorLale.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             authtorLale.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
     
-            phoneTextFiel.topAnchor.constraint(equalTo: authtorLale.bottomAnchor, constant: 80),
+            phoneTextFiel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             phoneTextFiel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             phoneTextFiel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            phoneTextFiel.heightAnchor.constraint(equalToConstant: 40)
+            phoneTextFiel.heightAnchor.constraint(equalToConstant: 40),
+            
+            signInButton.topAnchor.constraint(equalTo: phoneTextFiel.bottomAnchor, constant: 80),
+            signInButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            signInButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            signInButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
-   @objc private func dismissKeyboar(){
+    
+    @objc private func dismissKeyboar(){
         self.view.endEditing(true)
     }
+    
+    @objc private func signIn() {
+    }
 }
+
 extension AuthViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return false }
                let newString = (text as NSString).replacingCharacters(in: range, with: string)
                textField.text = formatPhoneNumber(number: newString)
                return false
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if textField.text!.count == 18 {
+            signInButton.isEnabled = true
+            signInButton.backgroundColor = .systemBlue
+            dismissKeyboar()
+        } else {
+            signInButton.isEnabled = false
+            signInButton.backgroundColor = .darkGray
+        }
     }
 }
 
