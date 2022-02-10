@@ -26,8 +26,14 @@ final class ApplicationController {
     
     static func showAuth() {
         print("Show Auth")
+        let navigationVC = UINavigationController()
+        navigationVC.navigationBar.titleTextAttributes  =  [.foregroundColor: UIColor.white ]
+        
         let vc = AuthViewController()
-        window?.rootViewController = vc
+        navigationVC.viewControllers = [vc]
+        
+        window?.rootViewController = navigationVC
+        //window?.makeKeyAndVisible()
 //        let authStoryboard = UIStoryboard(name: "Auth", bundle: nil)
 //        let vc = authStoryboard.instantiateInitialViewController() as? AuthViewController
 //        window?.rootViewController = vc

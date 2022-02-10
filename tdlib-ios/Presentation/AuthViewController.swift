@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TdlibKit
 
 class AuthViewController: UIViewController {
     
@@ -141,6 +142,10 @@ class AuthViewController: UIViewController {
     }
     
     @objc private func signIn() {
+        print("ButtonWork")
+      let vc = AuthCodeViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+        
     }
 }
 
