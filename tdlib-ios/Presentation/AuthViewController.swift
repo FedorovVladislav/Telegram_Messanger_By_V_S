@@ -146,16 +146,27 @@ class AuthViewController: UIViewController {
     }
     
     @objc private func signIn() {
+        let phoneNumber = removeNumberFormat(number: phoneTextFiel.text!)
         
-        ServiceManager.shared.telegramService.authphone()
-        
-        
+        ServiceManager.shared.authService.authphone(phoneNumber: phoneNumber )
         
         print("ButtonWork")
-      let vc = AuthCodeViewController()
+        
+        let vc = AuthCodeViewController()
         self.navigationController?.pushViewController(vc, animated: true)
         
     }
+    
+    private func removeNumberFormat(number: String) -> String {
+            let digits = CharacterSet.decimalDigits
+            var text = ""
+            for char in number.unicodeScalars {
+                if digits.contains(char) {
+                    text.append(char.description)
+                }
+            }
+            return text
+        }
 }
 
 extension AuthViewController: UITextFieldDelegate {
@@ -172,6 +183,7 @@ extension AuthViewController: UITextFieldDelegate {
             signInButton.isEnabled = true
             signInButton.backgroundColor = .systemBlue
             dismissKeyboar()
+            
         } else {
             signInButton.isEnabled = false
             signInButton.backgroundColor = .darkGray

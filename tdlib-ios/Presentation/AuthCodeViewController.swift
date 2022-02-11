@@ -16,7 +16,7 @@ class AuthCodeViewController: UIViewController {
         lable.translatesAutoresizingMaskIntoConstraints = false
         lable.font = UIFont.systemFont(ofSize: 20, weight: .light)
         lable.textColor = .white
-        lable.text = "Повторная отправка смс \n через 20 секунд"
+        lable.text = "Введите код подтверждения "
         lable.lineBreakMode = .byWordWrapping
         lable.numberOfLines = 0
         lable.textAlignment = .center
@@ -33,20 +33,20 @@ class AuthCodeViewController: UIViewController {
         
         return textField
     }()
-    let replySmsButton: UIButton  = {
-        let button  = UIButton()
-        
-        button.setTitle("Reply SMS", for: .normal)
-        button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 10
-        button.clipsToBounds = true
-        button.backgroundColor = .systemBlue
-        button.addTarget(self, action: #selector(replySMS), for: .touchUpInside)
-        button.isHidden = true
-        
-        return button
-    }()
+    //let replySmsButton: UIButton  = {
+    //    let button  = UIButton()
+//
+//        button.setTitle("Reply SMS", for: .normal)
+//        button.tintColor = .white
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.layer.cornerRadius = 10
+//        button.clipsToBounds = true
+//        button.backgroundColor = .systemBlue
+//        button.addTarget(self, action: #selector(replySMS), for: .touchUpInside)
+//        button.isHidden = true
+//
+//        return button
+//    }()
     var timer : Timer?
     var count = 20
     
@@ -63,10 +63,10 @@ class AuthCodeViewController: UIViewController {
         
         view.addSubview(textTextReplaySMS)
         view.addSubview(codeTextFueld)
-        view.addSubview(replySmsButton)
+        //view.addSubview(replySmsButton)
         
         activateConstraints()
-        startTimer()
+       // startTimer()
         
         // send sms
         
@@ -75,7 +75,7 @@ class AuthCodeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        startTimer()
+        // startTimer()
     }
     
     private func activateConstraints() {
@@ -90,44 +90,44 @@ class AuthCodeViewController: UIViewController {
             codeTextFueld.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             codeTextFueld.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            replySmsButton.widthAnchor.constraint(equalToConstant: 200),
-            replySmsButton.heightAnchor.constraint(equalToConstant: 40),
-            replySmsButton.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: 150),
-            replySmsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+//            replySmsButton.widthAnchor.constraint(equalToConstant: 200),
+//            replySmsButton.heightAnchor.constraint(equalToConstant: 40),
+//            replySmsButton.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: 150),
+//            replySmsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
-    private func startTimer() {
-        count = 20
-        
-        timer =  Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            if self.count <  1 {
-                timer.invalidate()
-                DispatchQueue.main.async {
-                    self.replySmsButton.isHidden = false
-                    self.textTextReplaySMS.text = "Повторная отправка смс"
-                }
-            } else {
-                self.count -= 1
-                DispatchQueue.main.async {
-                    self.textTextReplaySMS.text = "Повторная отправка смс \n через \(self.count) секунд "
-                }
-            }
-        }
-    }
+//    private func startTimer() {
+//        count = 20
+//
+//        timer =  Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+//            if self.count <  1 {
+//                timer.invalidate()
+//                DispatchQueue.main.async {
+//                    self.replySmsButton.isHidden = false
+//                    self.textTextReplaySMS.text = "Повторная отправка смс"
+//                }
+//            } else {
+//                self.count -= 1
+//                DispatchQueue.main.async {
+//                    self.textTextReplaySMS.text = "Повторная отправка смс \n через \(self.count) секунд "
+//                }
+//            }
+//        }
+//    }
     
-    @objc private func replySMS() {
-        print("Button Work ")
-        replySmsButton.isHidden = true
-        textTextReplaySMS.isHidden  = false
-        startTimer()
-    }
+//    @objc private func replySMS() {
+//        print("Button Work ")
+//        replySmsButton.isHidden = true
+//        textTextReplaySMS.isHidden  = false
+//        startTimer()
+//    }
 }
 
 extension AuthCodeViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if   textField.text?.count == 5 {
-            ServiceManager.shared.telegramService.setCode(code: textField.text!)
+            ServiceManager.shared.authService.setCode(code: textField.text!)
         }
     }
 }

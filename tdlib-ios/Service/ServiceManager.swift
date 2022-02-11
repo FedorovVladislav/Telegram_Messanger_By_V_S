@@ -19,5 +19,10 @@ class ServiceManager {
         
         self.telegramService = TelegramService()
         self.authService = AuthService(tdApi: telegramService.api)
+        telegramService.authDatadelegate = authService
+        
+        
+        
+        
     }
 }
