@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TdlibKit
 
 class AuthCodeViewController: UIViewController {
     
@@ -47,10 +48,13 @@ class AuthCodeViewController: UIViewController {
     }()
     var timer : Timer?
     var count = 20
+    
+
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+     
         self.title = "Insert Code"
         view.backgroundColor = .black
         
@@ -60,6 +64,10 @@ class AuthCodeViewController: UIViewController {
         
         activateConstraints()
         startTimer()
+        
+        // send sms
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

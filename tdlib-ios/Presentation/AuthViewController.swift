@@ -75,6 +75,10 @@ class AuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ServiceManager.shared.telegramService.run()
+        
+        
+        
         // Скрытие клавиатуры
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboar))
         view.addGestureRecognizer(tap)

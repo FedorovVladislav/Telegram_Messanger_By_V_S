@@ -788,6 +788,10 @@
 		3A6FD61B27664E4100CD6361 /* GetTemporaryPasswordState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD31627664E4000CD6361 /* GetTemporaryPasswordState.swift */; };
 		3A6FD61D27664EB200CD6361 /* TdApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD61C27664EB200CD6361 /* TdApi.swift */; };
 		44604C0F27B4CB12000683E9 /* AuthCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44604C0E27B4CB12000683E9 /* AuthCodeViewController.swift */; };
+		44A1CA1227B619070049F5E7 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1127B619070049F5E7 /* ServiceManager.swift */; };
+		44A1CA1527B61AA00049F5E7 /* TelegramService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1427B61AA00049F5E7 /* TelegramService.swift */; };
+		44A1CA1827B61C250049F5E7 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1727B61C250049F5E7 /* Logger.swift */; };
+		44A1CA1A27B621770049F5E7 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1927B621770049F5E7 /* AuthService.swift */; };
 		44A80A7F27B3B9AA00C3305A /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A80A7E27B3B9AA00C3305A /* AuthViewController.swift */; };
 		44A80A8127B3BE7D00C3305A /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44A80A8027B3BE7D00C3305A /* Storyboard.storyboard */; };
 		782C7489233BE2F6006039BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782C7488233BE2F6006039BE /* AppDelegate.swift */; };
@@ -1642,6 +1646,10 @@
 		3A6FD31627664E4000CD6361 /* GetTemporaryPasswordState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetTemporaryPasswordState.swift; sourceTree = "<group>"; };
 		3A6FD61C27664EB200CD6361 /* TdApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TdApi.swift; sourceTree = "<group>"; };
 		44604C0E27B4CB12000683E9 /* AuthCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCodeViewController.swift; sourceTree = "<group>"; };
+		44A1CA1127B619070049F5E7 /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
+		44A1CA1427B61AA00049F5E7 /* TelegramService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelegramService.swift; sourceTree = "<group>"; };
+		44A1CA1727B61C250049F5E7 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		44A1CA1927B621770049F5E7 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		44A80A7E27B3B9AA00C3305A /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		44A80A8027B3BE7D00C3305A /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		782C7486233BE2F6006039BE /* tdlib-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tdlib-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2493,6 +2501,33 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		44A1CA1027B618E20049F5E7 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				44A1CA1627B61C130049F5E7 /* Help */,
+				44A1CA1327B619520049F5E7 /* API */,
+				44A1CA1127B619070049F5E7 /* ServiceManager.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		44A1CA1327B619520049F5E7 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				44A1CA1427B61AA00049F5E7 /* TelegramService.swift */,
+				44A1CA1927B621770049F5E7 /* AuthService.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		44A1CA1627B61C130049F5E7 /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				44A1CA1727B61C250049F5E7 /* Logger.swift */,
+			);
+			path = Help;
+			sourceTree = "<group>";
+		};
 		782C746F233BE280006039BE = {
 			isa = PBXGroup;
 			children = (
@@ -2516,6 +2551,7 @@
 		782C7487233BE2F6006039BE /* tdlib-ios */ = {
 			isa = PBXGroup;
 			children = (
+				44A1CA1027B618E20049F5E7 /* Service */,
 				782C82D7233FB6BF006039BE /* Presentation */,
 				782C82D9233FB717006039BE /* Resources */,
 				782C82DA233FB722006039BE /* Supporting Files */,
@@ -2736,11 +2772,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44A1CA1527B61AA00049F5E7 /* TelegramService.swift in Sources */,
 				44A80A7F27B3B9AA00C3305A /* AuthViewController.swift in Sources */,
 				782C82EC233FF66D006039BE /* ApplicationController.swift in Sources */,
+				44A1CA1A27B621770049F5E7 /* AuthService.swift in Sources */,
 				44604C0F27B4CB12000683E9 /* AuthCodeViewController.swift in Sources */,
 				782C7489233BE2F6006039BE /* AppDelegate.swift in Sources */,
 				782C748B233BE2F6006039BE /* SceneDelegate.swift in Sources */,
+				44A1CA1227B619070049F5E7 /* ServiceManager.swift in Sources */,
+				44A1CA1827B61C250049F5E7 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
