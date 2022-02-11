@@ -146,6 +146,11 @@ class AuthViewController: UIViewController {
     }
     
     @objc private func signIn() {
+        
+        ServiceManager.shared.telegramService.authphone()
+        
+        
+        
         print("ButtonWork")
       let vc = AuthCodeViewController()
         self.navigationController?.pushViewController(vc, animated: true)
@@ -154,6 +159,7 @@ class AuthViewController: UIViewController {
 }
 
 extension AuthViewController: UITextFieldDelegate {
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return false }
                let newString = (text as NSString).replacingCharacters(in: range, with: string)

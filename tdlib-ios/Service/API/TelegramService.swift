@@ -10,6 +10,11 @@ import Foundation
 import TdlibKit
 import UIKit
 
+protocol ApiDataDelegate {
+    
+  func updateData(update: Update)
+}
+
 class TelegramService {
     
     let logger = StdOutLogger()
@@ -17,6 +22,7 @@ class TelegramService {
     let api: TdApi
     
     init(){
+        
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
         
         self.api = TdApi(client: client)
@@ -24,14 +30,16 @@ class TelegramService {
     
     func run() {
         
-        
         api.client.run(updateHandler: { [self] data in
             do {
                 let update = try self.api.decoder.decode(Update.self, from: data)
                 print("NewMessage ")
                 
                 if case .updateAuthorizationState(let state) = update {
-                    if case .authorizationStateWaitTdlibParameters = state.authorizationState {
+                    
+                    switch state.authorizationState {
+                        
+                    case .authorizationStateWaitTdlibParameters:
                         
                         print ("Set authorizationStateWaitTdlibParameters")
                         
@@ -40,8 +48,8 @@ class TelegramService {
                         }
                         let tdlibPath = cachesUrl.appendingPathComponent("tdlib", isDirectory: true).path
                         let params = TdlibParameters(
-                            apiHash: "6d72a8a01c126ebb38035f39a9083542", // https://core.telegram.org/api/obtaining_api_id
-                            apiId: 287311,
+                            apiHash: apiHash, // https://core.telegram.org/api/obtaining_api_id
+                            apiId: apiId,
                             applicationVersion: "1.0",
                             databaseDirectory: tdlibPath,
                             deviceModel: "iOS",
@@ -59,12 +67,67 @@ class TelegramService {
                             print("result \($0)")
                             //self?.chekResult($0)
                         }
+                        break
+                    case .authorizationStateWaitEncryptionKey(_):
+                        let keyData = "sdfsdkjfkbsddsj".data(using: .utf8)!
+                                    try api.checkDatabaseEncryptionKey(encryptionKey: keyData) { [weak self] in
+                                        //self?.chekResult($0)
+                                        print("result \($0)")
+                                    }
+                        break
+                        
+                    case .authorizationStateWaitPhoneNumber:
+                        print("authorizationStateWaitPhoneNumber")
+                        break
+                    case .authorizationStateWaitCode(_):
+                        break
+                    case .authorizationStateWaitOtherDeviceConfirmation(_):
+                        break
+                    case .authorizationStateWaitRegistration(_):
+                        break
+                    case .authorizationStateWaitPassword(_):
+                        break
+                    case .authorizationStateReady:
+                        print("authorizationStateReady")
+                        break
+                    case .authorizationStateLoggingOut:
+                        break
+                    case .authorizationStateClosing:
+                        break
+                    case .authorizationStateClosed:
+                        break
                     }
-
-                }
+                    
+                    }
+        
             } catch {
-                print("error")
+                print("error decode")
             }
         })
     }
+    
+    func authphone(){
+        
+         let phoneNumberAuthenticationSettings = PhoneNumberAuthenticationSettings(allowFlashCall: false, allowMissedCall: false, allowSmsRetrieverApi: false, authenticationTokens: [], isCurrentPhoneNumber: true)
+         
+             do {
+                 try api.setAuthenticationPhoneNumber(phoneNumber: "79581760204", settings: phoneNumberAuthenticationSettings, completion: { result in
+                     print (" resuil ti closer : \(result.publisher.result)")
+                 })
+             } catch {
+                 print("Error  write")
+             }
+    }
+    func setCode(code: String)
+    {
+        do{
+           try  api.checkAuthenticationCode(code: code, completion: { result in
+            
+            print (" resuil ti closer : \(result.publisher.result)")
+            
+        })
+        } catch {
+            print("Error  code registr")
+        }
+}
 }

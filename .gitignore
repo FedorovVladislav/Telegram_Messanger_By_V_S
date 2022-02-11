@@ -19,6 +19,13 @@ td-xcframework/build/
 !default.perspectivev3
 xcuserdata/
 
+
+
+tdlib-swift/Token.swift
+
+
+
+
 ## Other
 *.moved-aside
 *.xccheckout

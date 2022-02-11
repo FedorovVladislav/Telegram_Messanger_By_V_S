@@ -30,6 +30,7 @@ class AuthCodeViewController: UIViewController {
         textField.backgroundColor = .darkGray
         textField.textColor = .white
         textField.borderStyle = .roundedRect
+        
         return textField
     }()
     let replySmsButton: UIButton  = {
@@ -55,6 +56,8 @@ class AuthCodeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
      
+        codeTextFueld.delegate = self
+        
         self.title = "Insert Code"
         view.backgroundColor = .black
         
@@ -118,5 +121,13 @@ class AuthCodeViewController: UIViewController {
         replySmsButton.isHidden = true
         textTextReplaySMS.isHidden  = false
         startTimer()
+    }
+}
+
+extension AuthCodeViewController: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if   textField.text?.count == 5 {
+            ServiceManager.shared.telegramService.setCode(code: textField.text!)
+        }
     }
 }
