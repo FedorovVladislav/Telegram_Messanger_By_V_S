@@ -788,8 +788,12 @@
 		3A6FD61B27664E4100CD6361 /* GetTemporaryPasswordState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD31627664E4000CD6361 /* GetTemporaryPasswordState.swift */; };
 		3A6FD61D27664EB200CD6361 /* TdApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD61C27664EB200CD6361 /* TdApi.swift */; };
 		440AE4F527B68EE5001EFF56 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE4F427B68EE5001EFF56 /* Token.swift */; };
-		440AE4F727B69048001EFF56 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE4F627B69048001EFF56 /* ChatViewController.swift */; };
+		440AE4F727B69048001EFF56 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE4F627B69048001EFF56 /* ChatListViewController.swift */; };
 		440AE4F927B6A128001EFF56 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE4F827B6A128001EFF56 /* LoadingViewController.swift */; };
+		440AE4FB27B6D444001EFF56 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE4FA27B6D444001EFF56 /* ChatViewController.swift */; };
+		440AE4FD27B6D525001EFF56 /* ChatListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE4FC27B6D525001EFF56 /* ChatListService.swift */; };
+		440AE4FF27B6D64A001EFF56 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE4FE27B6D64A001EFF56 /* ChatService.swift */; };
+		440AE50127B78679001EFF56 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440AE50027B78679001EFF56 /* SettingsViewController.swift */; };
 		44604C0F27B4CB12000683E9 /* AuthCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44604C0E27B4CB12000683E9 /* AuthCodeViewController.swift */; };
 		44A1CA1227B619070049F5E7 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1127B619070049F5E7 /* ServiceManager.swift */; };
 		44A1CA1527B61AA00049F5E7 /* TelegramService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1427B61AA00049F5E7 /* TelegramService.swift */; };
@@ -1649,8 +1653,12 @@
 		3A6FD31627664E4000CD6361 /* GetTemporaryPasswordState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetTemporaryPasswordState.swift; sourceTree = "<group>"; };
 		3A6FD61C27664EB200CD6361 /* TdApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TdApi.swift; sourceTree = "<group>"; };
 		440AE4F427B68EE5001EFF56 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
-		440AE4F627B69048001EFF56 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		440AE4F627B69048001EFF56 /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		440AE4F827B6A128001EFF56 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		440AE4FA27B6D444001EFF56 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		440AE4FC27B6D525001EFF56 /* ChatListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListService.swift; sourceTree = "<group>"; };
+		440AE4FE27B6D64A001EFF56 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		440AE50027B78679001EFF56 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		44604C0E27B4CB12000683E9 /* AuthCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCodeViewController.swift; sourceTree = "<group>"; };
 		44A1CA1127B619070049F5E7 /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
 		44A1CA1427B61AA00049F5E7 /* TelegramService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelegramService.swift; sourceTree = "<group>"; };
@@ -2522,6 +2530,8 @@
 			children = (
 				44A1CA1427B61AA00049F5E7 /* TelegramService.swift */,
 				44A1CA1927B621770049F5E7 /* AuthService.swift */,
+				440AE4FC27B6D525001EFF56 /* ChatListService.swift */,
+				440AE4FE27B6D64A001EFF56 /* ChatService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -2601,9 +2611,11 @@
 		782C82D7233FB6BF006039BE /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				440AE4F627B69048001EFF56 /* ChatViewController.swift */,
+				440AE4F627B69048001EFF56 /* ChatListViewController.swift */,
+				440AE4FA27B6D444001EFF56 /* ChatViewController.swift */,
 				44A80A7E27B3B9AA00C3305A /* AuthViewController.swift */,
 				44604C0E27B4CB12000683E9 /* AuthCodeViewController.swift */,
+				440AE50027B78679001EFF56 /* SettingsViewController.swift */,
 				782C82DB233FB794006039BE /* Application */,
 			);
 			path = Presentation;
@@ -2783,16 +2795,20 @@
 			files = (
 				44A1CA1527B61AA00049F5E7 /* TelegramService.swift in Sources */,
 				440AE4F527B68EE5001EFF56 /* Token.swift in Sources */,
-				440AE4F727B69048001EFF56 /* ChatViewController.swift in Sources */,
+				440AE4F727B69048001EFF56 /* ChatListViewController.swift in Sources */,
 				44A80A7F27B3B9AA00C3305A /* AuthViewController.swift in Sources */,
 				782C82EC233FF66D006039BE /* ApplicationController.swift in Sources */,
 				44A1CA1A27B621770049F5E7 /* AuthService.swift in Sources */,
 				44604C0F27B4CB12000683E9 /* AuthCodeViewController.swift in Sources */,
+				440AE50127B78679001EFF56 /* SettingsViewController.swift in Sources */,
 				782C7489233BE2F6006039BE /* AppDelegate.swift in Sources */,
+				440AE4FF27B6D64A001EFF56 /* ChatService.swift in Sources */,
 				782C748B233BE2F6006039BE /* SceneDelegate.swift in Sources */,
 				44A1CA1227B619070049F5E7 /* ServiceManager.swift in Sources */,
+				440AE4FB27B6D444001EFF56 /* ChatViewController.swift in Sources */,
 				44A1CA1827B61C250049F5E7 /* Logger.swift in Sources */,
 				440AE4F927B6A128001EFF56 /* LoadingViewController.swift in Sources */,
+				440AE4FD27B6D525001EFF56 /* ChatListService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3748,7 +3764,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.glezman.tdlib-iosj";
+				PRODUCT_BUNDLE_IDENTIFIER = com.FedorovVS.TelegramByVS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -3769,7 +3785,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.glezman.tdlib-iosj";
+				PRODUCT_BUNDLE_IDENTIFIER = com.FedorovVS.TelegramByVS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;

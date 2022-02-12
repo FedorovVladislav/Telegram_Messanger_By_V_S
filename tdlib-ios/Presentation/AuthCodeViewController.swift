@@ -33,44 +33,20 @@ class AuthCodeViewController: UIViewController {
         
         return textField
     }()
-    //let replySmsButton: UIButton  = {
-    //    let button  = UIButton()
-//
-//        button.setTitle("Reply SMS", for: .normal)
-//        button.tintColor = .white
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.layer.cornerRadius = 10
-//        button.clipsToBounds = true
-//        button.backgroundColor = .systemBlue
-//        button.addTarget(self, action: #selector(replySMS), for: .touchUpInside)
-//        button.isHidden = true
-//
-//        return button
-//    }()
+ 
     var timer : Timer?
     var count = 20
     
-
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
-     
-        codeTextFueld.delegate = self
-        
         self.title = "Insert Code"
-        view.backgroundColor = .black
         
+        codeTextFueld.delegate = self
+
         view.addSubview(textTextReplaySMS)
         view.addSubview(codeTextFueld)
-        //view.addSubview(replySmsButton)
-        
+
         activateConstraints()
-       // startTimer()
-        
-        // send sms
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -127,7 +103,7 @@ class AuthCodeViewController: UIViewController {
 extension AuthCodeViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if   textField.text?.count == 5 {
-            ServiceManager.shared.authService.setCode(code: textField.text!)
+            ServiceManager.shared.authService.sendAuthCode(code: textField.text!)
         }
     }
 }

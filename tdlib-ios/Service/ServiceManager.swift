@@ -14,15 +14,21 @@ class ServiceManager {
 
     let telegramService: TelegramService
     let authService: AuthService
-   // let chatListService: ChatListService
+    let chatListService: ChatListService
+    let chatService: ChatService
+
     private init () {
         
-        self.telegramService = TelegramService()
-        self.authService = AuthService(tdApi: telegramService.api)
-        telegramService.authDatadelegate = authService
+        telegramService = TelegramService()
         
+        authService = AuthService(tdApi: telegramService.api)
+        telegramService.add(listener: authService)
         
+        chatListService = ChatListService()
+        telegramService.add(listener: chatListService)
         
-        
+        chatService = ChatService()
+        telegramService.add(listener: chatService)
     }
 }
+

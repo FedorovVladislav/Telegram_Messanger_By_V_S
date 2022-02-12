@@ -31,6 +31,12 @@
                                     <constraint firstAttribute="width" constant="128" id="tjM-TG-pvZ"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="79j-0U-Mee">
+                                <rect key="frame" x="177" y="367" width="89" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" image="gearshape" catalog="system" title="Button"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -47,9 +53,69 @@
             </objects>
             <point key="canvasLocation" x="114" y="66"/>
         </scene>
+        <!--Item 2-->
+        <scene sceneID="vu7-16-Tku">
+            <objects>
+                <viewController id="kcx-fF-lJ3" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Hyk-0b-PMd">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="QRz-L4-J8M"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item 2" id="Z00-Hx-Xj2"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UfC-8T-InW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="878" y="640"/>
+        </scene>
+        <!--Item 1-->
+        <scene sceneID="uIg-d4-zAI">
+            <objects>
+                <viewController id="Owo-iY-PPD" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fo1-oG-BR0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="5OO-C8-Uvn"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item 1" id="aDW-Od-iB9"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GQ1-oH-SUE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="878" y="33"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="tiQ-Fn-Ui4">
+            <objects>
+                <tabBarController id="geG-AI-BJp" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="vFk-VC-sCS">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" systemColor="labelColor"/>
+                        <color key="barTintColor" systemColor="labelColor"/>
+                        <color key="selectedImageTintColor" systemColor="linkColor"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Owo-iY-PPD" kind="relationship" relationship="viewControllers" id="xv3-Rf-0FH"/>
+                        <segue destination="kcx-fF-lJ3" kind="relationship" relationship="viewControllers" id="awS-oH-zhQ"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="spt-kq-9kS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-12" y="337"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Telegram_Messenger" width="1024" height="1024"/>
+        <image name="gearshape" catalog="system" width="128" height="121"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -8,41 +8,85 @@
 
 import Foundation
 import TdlibKit
-//import UIKit
 
-protocol AuthDataDelegate {
-    func updateAuthData(update: UpdateAuthorizationState)
+
+protocol UpdateListeners: AnyObject {
+    func updateData(update: Update)
 }
 
-class TelegramService {
+final class TelegramService {
         
+    // MARK: - Public properties
+       
     let api: TdApi
-    var authDatadelegate: AuthDataDelegate?
+    
+    // MARK: - Private properties
+    
+    private var listeners: [UpdateListenerWeakBox] = []
+       
+    // MARK: - Init
     
     init(){
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
         self.api = TdApi(client: client)
     }
     
+    // MARK: - Public Method
+    
     func run() {
-        
         api.client.run(updateHandler: { [self] data in
             
-            do {
-                let update = try self.api.decoder.decode(Update.self, from: data)
-                print("NewMessage ")
+        do {
+            let update = try self.api.decoder.decode(Update.self, from: data)
+            print("NewMessage ")
+                
+            try! updatelisterners(update: update)
              
-                if case .updateAuthorizationState(let state) = update {
-                    authDatadelegate?.updateAuthData(update: state)
-                }
-                if case .updateNewMessage(let state) = update {
-                    print ("updateNewMessage")
-                }
-        
-            } catch {
-                print("error decode")
-            }
+        } catch {
+            print("error decode")
+        }
         })
     }
     
+    func add(listener: UpdateListeners) {
+        let box = UpdateListenerWeakBox(value: listener)
+        listeners.append(box)
+        listeners.compact()
+    }
+    
+    func remove(listener: UpdateListeners) {
+        var listenerIndex: Int = -1
+        for (index, existingListener) in listeners.enumerated() {
+            if listener === existingListener.value {
+                listenerIndex = index
+                break
+            }
+        }
+        if listenerIndex >= 0 {
+            listeners.remove(at: listenerIndex)
+        }
+        listeners.compact()
+    }
+    
+    // MARK: - Private Method
+    
+    private func updatelisterners(update: Update) throws {
+        for listener in listeners {
+            listener.value?.updateData(update: update)
+        }
+    }
+}
+
+final class UpdateListenerWeakBox {
+    private(set) weak var value: UpdateListeners?
+
+    init(value: UpdateListeners?) {
+        self.value = value
+    }
+}
+
+private extension Array where Element == UpdateListenerWeakBox {
+    mutating func compact() {
+        self = self.filter { $0.value != nil }
+    }
 }

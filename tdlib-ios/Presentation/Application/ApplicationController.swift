@@ -20,23 +20,37 @@ final class ApplicationController {
     }
     
     static func showMain() {
-        let vc = ChatViewControl()
+        let tabBarVC = UITabBarController()
         
-        showNavigationVC(viewController: vc)
+        let chatVC = ChatListViewController()
+        let chatNavVC = initNavigationVC(viewController: chatVC)
+        chatNavVC.tabBarItem.image = UIImage(systemName: "message")
+        chatNavVC.tabBarItem.title = "Chats"
+        
+        let settingsVC = SettingsViewController()
+        let settingsNavVC = initNavigationVC(viewController: settingsVC)
+        settingsNavVC.tabBarItem.image = UIImage(systemName: "gearshape")
+        settingsNavVC.tabBarItem.title = "Settings"
+        
+        tabBarVC.setViewControllers([chatNavVC,settingsNavVC], animated: true)
+        tabBarVC.tabBar.unselectedItemTintColor = .systemGray
+        
+        window?.rootViewController = tabBarVC
     }
     
     static func showAuth() {
         let vc = AuthViewController()
         sleep(1)
-        showNavigationVC(viewController: vc)
+
+        window?.rootViewController = initNavigationVC(viewController: vc)
     }
     
-    static private func showNavigationVC(viewController vc: UIViewController) {
+    static private func initNavigationVC(viewController vc: UIViewController) -> UINavigationController {
         let navigationVC = UINavigationController()
         
         navigationVC.navigationBar.titleTextAttributes  =  [.foregroundColor: UIColor.white ]
         navigationVC.viewControllers = [vc]
         
-        window?.rootViewController = navigationVC
+        return navigationVC
     }
 }
