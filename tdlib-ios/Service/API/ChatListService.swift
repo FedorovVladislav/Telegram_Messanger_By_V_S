@@ -9,16 +9,33 @@
 import Foundation
 import TdlibKit
 
+protocol ChatListDelegate {
+    func updateChatList(chatData:[UpdateNewChat])
+}
+
 class ChatListService {
     
-    init(){
-        //ServiceManager.shared.chatListService.updateData(update: <#T##Update#>)
-        
-        
+    let api: TdApi
+    
+    var delegate: ChatListDelegate?
+    
+    var chatList: [UpdateNewChat]  = [] {
+        didSet {
+            print ("ChatList changed")
+            delegate?.updateChatList(chatData: chatList)
+        }
+    }
+
+    // MARK: - Init
+    
+    init(tdApi: TdApi) {
+        let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
+        self.api = TdApi(client: client)
     }
     
 }
 extension ChatListService: UpdateListeners {
+    
     func updateData(update: Update) {
         
         switch update{
@@ -26,6 +43,7 @@ extension ChatListService: UpdateListeners {
         /// A new chat has been loaded/created. This update is guaranteed to come before the chat identifier is returned to the application. The chat field changes will be reported through separate updates
         case .updateNewChat(let newChat):
             print("***** updateNewChat *******")
+            self.chatList.append(newChat)
         /// The title of a chat was changed
         case .updateChatTitle(let updateChatTitle):
             print("***** updateChatTitle *******")

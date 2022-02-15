@@ -26,10 +26,12 @@ class LoadingViewController: UIViewController {
         return activitiIndicator
     }()
     
+    var networkManager: AuthService? = nil
+    var router: RouterProtocol? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        networkManager?.authDelegate  = self
         self.view.backgroundColor = .black
         
         
@@ -51,4 +53,14 @@ class LoadingViewController: UIViewController {
         activityIndicator.startAnimating()
     }
 
+}
+
+extension  LoadingViewController: authStateDelegate {
+    func authStare(state: Bool) {
+        if state{
+            router?.chatListVC()
+        } else {
+            router?.authNumberVC()
+        }
+    }
 }

@@ -11,8 +11,14 @@ import TdlibKit
 
 class ChatService {
     
+    let api: TdApi
+
+    // MARK: - Init
     
-    
+    init(tdApi: TdApi){
+        let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
+        self.api = TdApi(client: client)
+    }
 }
 extension ChatService: UpdateListeners {
     func updateData(update: Update) {

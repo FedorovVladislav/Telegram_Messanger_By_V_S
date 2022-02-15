@@ -9,7 +9,7 @@
 import UIKit
 import TdlibKit
 
-class AuthViewController: UIViewController {
+class AuthNumberViewController: UIViewController {
     
     let iconImageView: UIImageView = {
         let imageView = UIImageView()
@@ -71,13 +71,12 @@ class AuthViewController: UIViewController {
         return button
     }()
     
+    var presenter: AuthNumberPresenterProtocol!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ServiceManager.shared.telegramService.run()
-        
-        
+       // ServiceManager.shared.telegramService.run()
         
         // Скрытие клавиатуры
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboar))
@@ -148,12 +147,12 @@ class AuthViewController: UIViewController {
     @objc private func signIn() {
         let phoneNumber = removeNumberFormat(number: phoneTextFiel.text!)
         
-        ServiceManager.shared.authService.authphone(phoneNumber: phoneNumber )
-        
+        //ServiceManager.shared.authService.authphone(phoneNumber: phoneNumber )
+        presenter.sendCode(number: phoneNumber)
         print("ButtonWork")
         
-        let vc = AuthCodeViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        //let vc = AuthCodeViewController()
+        //self.navigationController?.pushViewController(vc, animated: true)
         
     }
     
@@ -169,7 +168,11 @@ class AuthViewController: UIViewController {
         }
 }
 
-extension AuthViewController: UITextFieldDelegate {
+extension AuthNumberViewController: AuthNumberViewProtocol {
+    
+}
+
+extension AuthNumberViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return false }

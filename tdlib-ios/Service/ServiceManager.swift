@@ -9,25 +9,23 @@
 import Foundation
 
 class ServiceManager {
-    
-    static let shared = ServiceManager()
 
     let telegramService: TelegramService
     let authService: AuthService
     let chatListService: ChatListService
     let chatService: ChatService
 
-    private init () {
+    init() {
         
         telegramService = TelegramService()
         
         authService = AuthService(tdApi: telegramService.api)
         telegramService.add(listener: authService)
         
-        chatListService = ChatListService()
+        chatListService = ChatListService(tdApi: telegramService.api)
         telegramService.add(listener: chatListService)
         
-        chatService = ChatService()
+        chatService = ChatService(tdApi: telegramService.api)
         telegramService.add(listener: chatService)
     }
 }

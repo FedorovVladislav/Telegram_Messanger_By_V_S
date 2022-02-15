@@ -5,9 +5,15 @@
 //  Created by Елизавета Федорова on 11.02.2022.
 //  Copyright © 2022 Anton Glezman. All rights reserved.
 //
-
-import Foundation
 import TdlibKit
+import UIKit
+
+protocol NetworkServiceProtocol {
+    func updateData(update: Update)
+}
+protocol authStateDelegate {
+    func authStare(state: Bool)
+}
 
 class AuthService {
     
@@ -15,20 +21,10 @@ class AuthService {
     
     private let api: TdApi
     private var authorizationState: AuthorizationState?
-    
+    var authDelegate: authStateDelegate?
     
     // MARK: - Public properties
-    
-    private(set) var isAuthorized: Bool = false {
-        didSet {
-            if isAuthorized {
-                ApplicationController.showMain()
-            } else {
-                ApplicationController.showAuth()
-            }
-        }
-    }
-   // weak var delegate: AuthServiceDelegate?
+   
     
     // MARK: - Init
     
@@ -105,7 +101,7 @@ class AuthService {
             authorizationStateWaitEncryptionKey()
 
         case .authorizationStateWaitPhoneNumber:
-            self.isAuthorized = false
+            self.authDelegate?.authStare(state: false)
    
         case .authorizationStateWaitCode(_):
             break
@@ -120,16 +116,16 @@ class AuthService {
             break
    
         case .authorizationStateReady:
-            self.isAuthorized = true
+            self.authDelegate?.authStare(state: true)
    
         case .authorizationStateLoggingOut:
-            self.isAuthorized = false
+            self.authDelegate?.authStare(state: false)
    
         case .authorizationStateClosing:
             break
    
         case .authorizationStateClosed:
-            self.isAuthorized = false
+            self.authDelegate?.authStare(state: false)
         }
     }
 }

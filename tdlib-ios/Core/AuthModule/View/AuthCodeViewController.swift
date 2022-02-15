@@ -36,6 +36,7 @@ class AuthCodeViewController: UIViewController {
  
     var timer : Timer?
     var count = 20
+    var presenter: AuthCodePresenterProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,10 +101,14 @@ class AuthCodeViewController: UIViewController {
 //    }
 }
 
+extension AuthCodeViewController: AuthCodeViewProtocol {
+    
+}
 extension AuthCodeViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if   textField.text?.count == 5 {
-            ServiceManager.shared.authService.sendAuthCode(code: textField.text!)
+            presenter.getCode(code: textField.text!)
+            //ServiceManager.shared.authService.sendAuthCode(code: textField.text!)
         }
     }
 }

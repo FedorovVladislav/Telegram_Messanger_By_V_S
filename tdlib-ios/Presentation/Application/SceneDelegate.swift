@@ -11,25 +11,29 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
     
-//    func changeRootVC(_ vc: UIViewController, animated: Bool) {
-//
-//        guard let  window = self.window else { return }
-//
-//        window.rootViewController = vc
-//    }
-
+    var router: Router?
+   
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
-        if let windowScene = scene as? UIWindowScene {
-            let window = UIWindow(windowScene: windowScene)
-            ApplicationController.showFirstController(window)
-            self.window = window
-            window.makeKeyAndVisible()
-        }
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        window?.windowScene = windowScene
+        
+        let appBuilder = ApplicationBuilder()
+        
+        let tabBarVC = UITabBarController()
+        tabBarVC.tabBar.unselectedItemTintColor = .systemGray
+        
+        let navigationVC = UINavigationController()
+        navigationVC.navigationBar.titleTextAttributes  =  [.foregroundColor: UIColor.white ]
+        
+        router =  Router(windows: window!, tabBarController: tabBarVC, navigationController: navigationVC, appBuilder: appBuilder)
+        
+        router!.loadVC()
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

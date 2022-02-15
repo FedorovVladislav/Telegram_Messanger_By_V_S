@@ -10,6 +10,8 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
+    var presenter: SettingsPresenterProtocol!
+    
     let logOffButton: UIButton = {
         let button = UIButton()
         
@@ -39,6 +41,10 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func logOff() {
-        ServiceManager.shared.authService.loggOff()
+        //ServiceManager.shared.authService.loggOff()
     }
 }
+extension SettingsViewController: SettingsViewProtocol {
+    
+}
+

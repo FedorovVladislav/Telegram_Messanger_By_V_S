@@ -29,6 +29,7 @@ final class TelegramService {
     init(){
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
         self.api = TdApi(client: client)
+        self.run()
     }
     
     // MARK: - Public Method

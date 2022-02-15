@@ -79,7 +79,7 @@
                         <viewLayoutGuide key="safeArea" id="5OO-C8-Uvn"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 1" id="aDW-Od-iB9"/>
+                    <tabBarItem key="tabBarItem" title="Item 1" selectedImage="repeat" catalog="system" id="aDW-Od-iB9"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GQ1-oH-SUE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -110,6 +110,7 @@
     <resources>
         <image name="Telegram_Messenger" width="1024" height="1024"/>
         <image name="gearshape" catalog="system" width="128" height="121"/>
+        <image name="repeat" catalog="system" width="128" height="98"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
