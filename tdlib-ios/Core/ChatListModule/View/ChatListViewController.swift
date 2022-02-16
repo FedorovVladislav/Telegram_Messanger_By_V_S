@@ -12,14 +12,13 @@ import TdlibKit
 class ChatListViewController: UIViewController {
     
     let chatTable: UITableView = {
+        let tableView = UITableView()
         
-       let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .black
         
         return tableView
     }()
-    
     let reloadButton :UIBarButtonItem = {
         let image = UIImage(systemName: "repeat")
         
@@ -29,7 +28,6 @@ class ChatListViewController: UIViewController {
         return barButtonItem
     }()
    
-    
     var presenter: ChatListPresenter!
     
     var chatData: [UpdateNewChat]?
@@ -40,7 +38,6 @@ class ChatListViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = reloadButton
         
-        getChatList()
         view.addSubview(chatTable)
         chatTable.dataSource = self
         chatTable.delegate = self
@@ -54,15 +51,15 @@ class ChatListViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        chatTable.reloadData()
+        presenter.getContact()
     }
     
     func getChatList() {
         
     }
+    
     @objc func updateTable() {
-        print("BButton work ")
-        chatTable.reloadData()
+        presenter.getContact()
     }
 }
 extension ChatListViewController: ChatListViewProtocol {
@@ -71,8 +68,7 @@ extension ChatListViewController: ChatListViewProtocol {
         self.chatData = chatData
         updateTable()
     }
-    
-    
+
 }
 
 extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {

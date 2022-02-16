@@ -11,9 +11,6 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
-    var router: Router?
-   
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
@@ -22,15 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
-        let appBuilder = ApplicationBuilder()
-        
-        let tabBarVC = UITabBarController()
-        tabBarVC.tabBar.unselectedItemTintColor = .systemGray
-        let navvc = UINavigationController()
-        
-        router =  Router(windows: window!, tabBarController: tabBarVC, appBuilder: appBuilder, navigationController:navvc )
-        
-        router!.start()
+        window?.rootViewController  = RouterViewController()
         window?.makeKeyAndVisible()
     }
 
@@ -63,5 +52,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
 
+}
+extension SceneDelegate {
+    var rootViewConteroller : RouterViewController {
+        return  window!.rootViewController  as! RouterViewController
+    }
 }
 

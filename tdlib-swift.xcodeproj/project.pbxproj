@@ -801,12 +801,13 @@
 		44A1CA1827B61C250049F5E7 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1727B61C250049F5E7 /* Logger.swift */; };
 		44A1CA1A27B621770049F5E7 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1CA1927B621770049F5E7 /* AuthService.swift */; };
 		44A80A8127B3BE7D00C3305A /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44A80A8027B3BE7D00C3305A /* Storyboard.storyboard */; };
-		44ACF9D827BA794D00FB96F9 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9D727BA794C00FB96F9 /* Router.swift */; };
+		44ACF9D827BA794D00FB96F9 /* RouterOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9D727BA794C00FB96F9 /* RouterOld.swift */; };
 		44ACF9DD27BA8B1B00FB96F9 /* AuthNumberPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9DC27BA8B1B00FB96F9 /* AuthNumberPresenter.swift */; };
 		44ACF9DF27BA8B2900FB96F9 /* AuthCodePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9DE27BA8B2900FB96F9 /* AuthCodePresenter.swift */; };
 		44ACF9E127BA950600FB96F9 /* AuthNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9E027BA950600FB96F9 /* AuthNumberViewController.swift */; };
 		44ACF9E727BA9EF000FB96F9 /* ChatListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9E627BA9EF000FB96F9 /* ChatListPresenter.swift */; };
 		44ACF9EC27BB713300FB96F9 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9EB27BB713300FB96F9 /* SettingsPresenter.swift */; };
+		44ACF9EF27BD112A00FB96F9 /* RouterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ACF9EE27BD112A00FB96F9 /* RouterViewController.swift */; };
 		782C7489233BE2F6006039BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782C7488233BE2F6006039BE /* AppDelegate.swift */; };
 		782C748B233BE2F6006039BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782C748A233BE2F6006039BE /* SceneDelegate.swift */; };
 		782C7492233BE2F7006039BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 782C7491233BE2F7006039BE /* Assets.xcassets */; };
@@ -814,7 +815,7 @@
 		782C7965233BE538006039BE /* TdlibKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 782C795E233BE538006039BE /* TdlibKit.framework */; };
 		782C7966233BE538006039BE /* TdlibKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 782C795E233BE538006039BE /* TdlibKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		782C7E3A233BEC01006039BE /* TdClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782C7E39233BEC01006039BE /* TdClientImpl.swift */; };
-		782C82EC233FF66D006039BE /* ApplicationBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782C82EB233FF66D006039BE /* ApplicationBuilder.swift */; };
+		782C82EC233FF66D006039BE /* AssemblyModelBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782C82EB233FF66D006039BE /* AssemblyModelBuilder.swift */; };
 		788885C724A5F3340097820A /* libc++.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 788885C624A5F3340097820A /* libc++.1.tbd */; };
 		788885C924A5F33B0097820A /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 788885C824A5F33B0097820A /* libz.1.tbd */; };
 		788885CB24A5F3470097820A /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 788885CA24A5F3470097820A /* libSystem.B.tbd */; };
@@ -1672,12 +1673,13 @@
 		44A1CA1727B61C250049F5E7 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		44A1CA1927B621770049F5E7 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		44A80A8027B3BE7D00C3305A /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		44ACF9D727BA794C00FB96F9 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		44ACF9D727BA794C00FB96F9 /* RouterOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterOld.swift; sourceTree = "<group>"; };
 		44ACF9DC27BA8B1B00FB96F9 /* AuthNumberPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNumberPresenter.swift; sourceTree = "<group>"; };
 		44ACF9DE27BA8B2900FB96F9 /* AuthCodePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCodePresenter.swift; sourceTree = "<group>"; };
 		44ACF9E027BA950600FB96F9 /* AuthNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthNumberViewController.swift; sourceTree = "<group>"; };
 		44ACF9E627BA9EF000FB96F9 /* ChatListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListPresenter.swift; sourceTree = "<group>"; };
 		44ACF9EB27BB713300FB96F9 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
+		44ACF9EE27BD112A00FB96F9 /* RouterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterViewController.swift; sourceTree = "<group>"; };
 		782C7486233BE2F6006039BE /* tdlib-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tdlib-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		782C7488233BE2F6006039BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		782C748A233BE2F6006039BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1688,7 +1690,7 @@
 		782C795E233BE538006039BE /* TdlibKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TdlibKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		782C7961233BE538006039BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		782C7E39233BEC01006039BE /* TdClientImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TdClientImpl.swift; sourceTree = "<group>"; };
-		782C82EB233FF66D006039BE /* ApplicationBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationBuilder.swift; sourceTree = "<group>"; };
+		782C82EB233FF66D006039BE /* AssemblyModelBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssemblyModelBuilder.swift; sourceTree = "<group>"; };
 		788885C324A5F3220097820A /* TdLib.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TdLib.xcframework; sourceTree = "<group>"; };
 		788885C624A5F3340097820A /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.5.sdk/usr/lib/libc++.1.tbd"; sourceTree = DEVELOPER_DIR; };
 		788885C824A5F33B0097820A /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.5.sdk/usr/lib/libz.1.tbd; sourceTree = DEVELOPER_DIR; };
@@ -2643,6 +2645,14 @@
 			path = Presenter;
 			sourceTree = "<group>";
 		};
+		44ACF9F027BD2C3900FB96F9 /* Old */ = {
+			isa = PBXGroup;
+			children = (
+				44ACF9D727BA794C00FB96F9 /* RouterOld.swift */,
+			);
+			path = Old;
+			sourceTree = "<group>";
+		};
 		782C746F233BE280006039BE = {
 			isa = PBXGroup;
 			children = (
@@ -2666,6 +2676,7 @@
 		782C7487233BE2F6006039BE /* tdlib-ios */ = {
 			isa = PBXGroup;
 			children = (
+				44ACF9F027BD2C3900FB96F9 /* Old */,
 				44ACF9E227BA9DC500FB96F9 /* Core */,
 				44A1CA1027B618E20049F5E7 /* Service */,
 				782C82D7233FB6BF006039BE /* Presentation */,
@@ -2741,8 +2752,8 @@
 			children = (
 				782C7488233BE2F6006039BE /* AppDelegate.swift */,
 				782C748A233BE2F6006039BE /* SceneDelegate.swift */,
-				782C82EB233FF66D006039BE /* ApplicationBuilder.swift */,
-				44ACF9D727BA794C00FB96F9 /* Router.swift */,
+				782C82EB233FF66D006039BE /* AssemblyModelBuilder.swift */,
+				44ACF9EE27BD112A00FB96F9 /* RouterViewController.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -2897,12 +2908,13 @@
 				440AE4F727B69048001EFF56 /* ChatListViewController.swift in Sources */,
 				444DA33C27BA7821000968D0 /* ContactViewController.swift in Sources */,
 				44ACF9DD27BA8B1B00FB96F9 /* AuthNumberPresenter.swift in Sources */,
-				44ACF9D827BA794D00FB96F9 /* Router.swift in Sources */,
+				44ACF9D827BA794D00FB96F9 /* RouterOld.swift in Sources */,
 				44ACF9EC27BB713300FB96F9 /* SettingsPresenter.swift in Sources */,
-				782C82EC233FF66D006039BE /* ApplicationBuilder.swift in Sources */,
+				782C82EC233FF66D006039BE /* AssemblyModelBuilder.swift in Sources */,
 				44A1CA1A27B621770049F5E7 /* AuthService.swift in Sources */,
 				44604C0F27B4CB12000683E9 /* AuthCodeViewController.swift in Sources */,
 				440AE50127B78679001EFF56 /* SettingsViewController.swift in Sources */,
+				44ACF9EF27BD112A00FB96F9 /* RouterViewController.swift in Sources */,
 				44ACF9DF27BA8B2900FB96F9 /* AuthCodePresenter.swift in Sources */,
 				782C7489233BE2F6006039BE /* AppDelegate.swift in Sources */,
 				440AE4FF27B6D64A001EFF56 /* ChatService.swift in Sources */,

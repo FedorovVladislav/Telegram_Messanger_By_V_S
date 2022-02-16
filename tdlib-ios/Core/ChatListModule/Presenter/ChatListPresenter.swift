@@ -16,11 +16,18 @@ protocol ChatListViewProtocol: class {
 protocol ChatListPresenterProtocol: class {
     init(view: ChatListViewProtocol, router: RouterProtocol, networkLayer: ChatListService)
     func openChat(chatID: Int64)
+    func getContact()
 }
 
 
 
 class ChatListPresenter: ChatListPresenterProtocol {
+    
+    
+    func getContact() {
+        print("***ButtonWork***")
+        networkLayer.getContact()
+    }
     
     let view: ChatListViewProtocol
     let router: RouterProtocol
@@ -32,22 +39,15 @@ class ChatListPresenter: ChatListPresenterProtocol {
         self.networkLayer = networkLayer
         
         networkLayer.delegate = self
-        
-        let chatlist = ChatList.chatListMain
-        print("*********************  GetContact  ***********************")
-    
-        try! networkLayer.api.loadChats(chatList: chatlist, limit: 29, completion: { result in
-            
-        })
     }
     
     func openChat(chatID: Int64) {
         print(chatID)
     }
+    
 }
 extension ChatListPresenter: ChatListDelegate {
     func updateChatList(chatData: [UpdateNewChat]) {
-        
         print("Delegate work")
         view.updateTableList(chatData: chatData)
     }

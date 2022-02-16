@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ApplicationBuilderProtocol {
+protocol AssemblyBuilderProtocol {
     func createLoadingModule(router: RouterProtocol) -> UIViewController
     func createAuthNumberModule(router: RouterProtocol) -> UIViewController
     func createAuthCodeModule(router: RouterProtocol) -> UIViewController
@@ -16,17 +16,16 @@ protocol ApplicationBuilderProtocol {
     func createSettingsModule(router: RouterProtocol) -> UIViewController
 }
 
-class ApplicationBuilder: ApplicationBuilderProtocol {
+class AssemblyModelBuilder: AssemblyBuilderProtocol {
+    
+    private let serviceManager = ServiceManager()
+    
     func createSettingsModule(router: RouterProtocol) -> UIViewController {
         let view = SettingsViewController()
         let presenter = SettingsPresenter(view: view, router: router, networkManadger: serviceManager.authService)
         view.presenter = presenter
         return  view
-    
     }
-    
-   
-    private let serviceManager = ServiceManager()
     
     func createLoadingModule(router: RouterProtocol) -> UIViewController {
         let view = LoadingViewController()
@@ -55,5 +54,4 @@ class ApplicationBuilder: ApplicationBuilderProtocol {
         view.presenter = presenter
         return  view
     }
-    
 }

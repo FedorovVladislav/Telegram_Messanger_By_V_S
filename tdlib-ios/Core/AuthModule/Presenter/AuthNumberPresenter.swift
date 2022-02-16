@@ -22,7 +22,7 @@ class AuthNumberPresenter: AuthNumberPresenterProtocol {
     
     func sendCode(number: String) {
         print ("******** presenter send code***********")
-        //networkLayer.authphone(phoneNumber: number)
+        networkLayer.authphone(phoneNumber: number)
         router.authCodeVC()
         
     }

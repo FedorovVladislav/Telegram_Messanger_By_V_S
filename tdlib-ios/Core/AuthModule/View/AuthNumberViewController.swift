@@ -145,8 +145,8 @@ class AuthNumberViewController: UIViewController {
     @objc private func signIn() {
         let phoneNumber = removeNumberFormat(number: phoneTextFiel.text!)
 
-     presenter.sendCode(number: phoneNumber)
-      print("ButtonWork")
+        presenter.sendCode(number: phoneNumber)
+        print("ButtonWork")
 
         
     }

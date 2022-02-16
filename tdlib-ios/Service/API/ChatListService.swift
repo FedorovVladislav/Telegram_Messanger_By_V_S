@@ -33,6 +33,11 @@ class ChatListService {
         self.api = TdApi(client: client)
     }
     
+    func getContact() {
+        let chatlistt = ChatList.chatListMain
+       try! api.loadChats(chatList: chatlistt, limit: 20, completion: { result in
+        })
+    }
 }
 extension ChatListService: UpdateListeners {
     

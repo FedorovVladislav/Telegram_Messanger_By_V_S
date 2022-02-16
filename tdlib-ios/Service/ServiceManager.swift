@@ -16,7 +16,6 @@ class ServiceManager {
     let chatService: ChatService
 
     init() {
-        
         telegramService = TelegramService()
         
         authService = AuthService(tdApi: telegramService.api)
