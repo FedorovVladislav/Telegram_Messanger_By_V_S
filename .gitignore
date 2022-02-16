@@ -3,6 +3,8 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+tdlib-ios/Token.swift
+
 ## Build generated
 build/
 DerivedData/
@@ -21,7 +23,7 @@ xcuserdata/
 
 
 
-tdlib-swift/tdlib-ios/Token.swift
+
 
 
 

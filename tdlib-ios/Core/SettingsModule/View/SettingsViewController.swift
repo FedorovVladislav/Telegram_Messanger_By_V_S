@@ -9,9 +9,6 @@
 import UIKit
 
 class SettingsViewController: UIViewController {
-    
-    var presenter: SettingsPresenterProtocol!
-    
     let logOffButton: UIButton = {
         let button = UIButton()
         
@@ -26,7 +23,8 @@ class SettingsViewController: UIViewController {
         return button
     }()
     
-
+    var presenter: SettingsPresenterProtocol!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(logOffButton)
@@ -41,7 +39,7 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func logOff() {
-        //ServiceManager.shared.authService.loggOff()
+        presenter.signOut()
     }
 }
 extension SettingsViewController: SettingsViewProtocol {

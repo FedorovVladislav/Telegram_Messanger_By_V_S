@@ -31,6 +31,7 @@ class LoadingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         networkManager?.authDelegate  = self
         self.view.backgroundColor = .black
         
@@ -56,8 +57,9 @@ class LoadingViewController: UIViewController {
 }
 
 extension  LoadingViewController: authStateDelegate {
+    
     func authStare(state: Bool) {
-        if state{
+        if state {
             router?.chatListVC()
         } else {
             router?.authNumberVC()

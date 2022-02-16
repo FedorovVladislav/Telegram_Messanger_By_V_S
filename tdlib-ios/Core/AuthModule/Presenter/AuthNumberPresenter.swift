@@ -14,14 +14,16 @@ class AuthNumberPresenter: AuthNumberPresenterProtocol {
     let router: RouterProtocol
     let networkLayer: AuthService
     
-    required init(view: AuthNumberViewProtocol, router: RouterProtocol,networkLayer: AuthService) {
+    required init(view: AuthNumberViewProtocol, router: RouterProtocol, networkLayer: AuthService) {
         self.view = view
         self.router = router
         self.networkLayer = networkLayer
     }
     
     func sendCode(number: String) {
-        networkLayer.authphone(phoneNumber: number)
+        print ("******** presenter send code***********")
+        //networkLayer.authphone(phoneNumber: number)
         router.authCodeVC()
+        
     }
 }

@@ -76,8 +76,6 @@ class AuthNumberViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-       // ServiceManager.shared.telegramService.run()
-        
         // Скрытие клавиатуры
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboar))
         view.addGestureRecognizer(tap)
@@ -146,13 +144,10 @@ class AuthNumberViewController: UIViewController {
     
     @objc private func signIn() {
         let phoneNumber = removeNumberFormat(number: phoneTextFiel.text!)
-        
-        //ServiceManager.shared.authService.authphone(phoneNumber: phoneNumber )
-        presenter.sendCode(number: phoneNumber)
-        print("ButtonWork")
-        
-        //let vc = AuthCodeViewController()
-        //self.navigationController?.pushViewController(vc, animated: true)
+
+     presenter.sendCode(number: phoneNumber)
+      print("ButtonWork")
+
         
     }
     

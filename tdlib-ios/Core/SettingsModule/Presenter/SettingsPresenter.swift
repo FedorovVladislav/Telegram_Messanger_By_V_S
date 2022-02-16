@@ -8,11 +8,12 @@
 
 import Foundation
 
-protocol SettingsViewProtocol{
+protocol SettingsViewProtocol {
 
 }
 
-protocol SettingsPresenterProtocol{
+protocol SettingsPresenterProtocol {
+    
     init(view: SettingsViewProtocol, router: RouterProtocol, networkManadger: AuthService)
     func signOut()
 }
@@ -30,6 +31,7 @@ class SettingsPresenter: SettingsPresenterProtocol {
     
     func signOut() {
         nerworkManager.loggOff()
+        router.authNumberVC()
     }
 }
 

@@ -15,10 +15,10 @@ protocol RouterMain {
     var tabBarController: UITabBarController { get set }
     var navigationController: UINavigationController { get set }
     var appBuilder: ApplicationBuilder { get set }
+    func start()
 }
 
 protocol RouterProtocol: RouterMain {
-   func loadVC()
     func authCodeVC()
     func authNumberVC()
    // func contactVC()
@@ -30,50 +30,58 @@ protocol RouterProtocol: RouterMain {
 
 class Router: RouterProtocol {
     
-    func loadVC() {
-        let vc = appBuilder.createLoadingModule(router: self)
-        windows.rootViewController = vc
-    }
-    
     var tabBarController: UITabBarController
-    var navigationController: UINavigationController
     var appBuilder: ApplicationBuilder
     var windows: UIWindow
+var navigationController: UINavigationController
     
-    init(windows: UIWindow, tabBarController: UITabBarController, navigationController: UINavigationController, appBuilder: ApplicationBuilder) {
+    init(windows: UIWindow, tabBarController: UITabBarController, appBuilder: ApplicationBuilder, navigationController: UINavigationController) {
         self.windows = windows
         self.tabBarController = tabBarController
-        self.navigationController = navigationController
         self.appBuilder = appBuilder
+        self.navigationController = navigationController
+    }
+    
+    func start() {
+//        let vc = appBuilder.createLoadingModule(router: self)
+//        navigationController.setViewControllers([vc], animated: true)
+//        windows.rootViewController = navigationController
+        
+        let vc = appBuilder.createAuthNumberModule(router: self)
+       let nav = UINavigationController(rootViewController: vc)
+        windows.rootViewController = nav
     }
     
     func authNumberVC() {
         let vc = appBuilder.createAuthNumberModule(router: self)
         navigationController.setViewControllers([vc], animated: true)
+
+        
         windows.rootViewController = navigationController
+        windows.makeKeyAndVisible()
     }
     
     func authCodeVC() {
+        print ("authCodeVC")
         let vc = appBuilder.createAuthCodeModule(router: self)
-        windows.rootViewController?.navigationController?.show(vc, sender: nil)
+        windows.rootViewController?.view.n
+        
     }
 
     func chatListVC() {
 
         let chatVC = appBuilder.createChatListModule(router: self)
-        let chatNavVC = navigationController
+        let chatNavVC = UINavigationController(rootViewController: chatVC)
         chatNavVC.tabBarItem.image = UIImage(systemName: "message")
         chatNavVC.tabBarItem.title = "Chats"
-        chatNavVC.setViewControllers([chatVC], animated: true)
-        
-        let settingsVC = appBuilder.createSettingsModule(router: self)
-        let settingsNavVC = navigationController
-        settingsNavVC.tabBarItem.image = UIImage(systemName: "gearshape")
-        settingsNavVC.tabBarItem.title = "Settings"
-        settingsNavVC.setViewControllers([settingsVC], animated: true)
 
         
-        tabBarController.setViewControllers([chatNavVC], animated: true)
+        let settingsVC = appBuilder.createSettingsModule(router: self)
+        let settingsNavVC = UINavigationController(rootViewController: settingsVC)
+        settingsNavVC.tabBarItem.image = UIImage(systemName: "gearshape")
+        settingsNavVC.tabBarItem.title = "Settings"
+    
+        tabBarController.setViewControllers([chatNavVC,settingsNavVC], animated: true)
         windows.rootViewController = tabBarController
     }
     

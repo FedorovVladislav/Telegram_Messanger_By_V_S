@@ -26,13 +26,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let tabBarVC = UITabBarController()
         tabBarVC.tabBar.unselectedItemTintColor = .systemGray
+        let navvc = UINavigationController()
         
-        let navigationVC = UINavigationController()
-        navigationVC.navigationBar.titleTextAttributes  =  [.foregroundColor: UIColor.white ]
+        router =  Router(windows: window!, tabBarController: tabBarVC, appBuilder: appBuilder, navigationController:navvc )
         
-        router =  Router(windows: window!, tabBarController: tabBarVC, navigationController: navigationVC, appBuilder: appBuilder)
-        
-        router!.loadVC()
+        router!.start()
         window?.makeKeyAndVisible()
     }
 
