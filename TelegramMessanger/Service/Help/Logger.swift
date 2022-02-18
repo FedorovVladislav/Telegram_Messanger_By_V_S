@@ -32,3 +32,9 @@ public final class StdOutLogger: Logger {
         }
     }
 }
+
+//print("""
+//    \(fisrtLine)
+//    \(message)
+//    ---------------------------
+//    """)

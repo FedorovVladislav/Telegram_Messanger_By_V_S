@@ -10,7 +10,7 @@ import Foundation
 import TdlibKit
 
 protocol ChatListViewProtocol: class {
-    func updateTableList(chatData: [UpdateNewChat])
+    func updateTableList(chatDic: [Int64 : ChatModel], chatPos: [ChatPositionlist])
     
 }
 protocol ChatListPresenterProtocol: class {
@@ -47,8 +47,9 @@ class ChatListPresenter: ChatListPresenterProtocol {
     
 }
 extension ChatListPresenter: ChatListDelegate {
-    func updateChatList(chatData: [UpdateNewChat]) {
-        print("Delegate work")
-        view.updateTableList(chatData: chatData)
+    func updateChatList(chatDic: [Int64 : ChatModel], chatPos: [ChatPositionlist]) {
+        view.updateTableList(chatDic: chatDic, chatPos: chatPos)
     }
+    
+    
 }

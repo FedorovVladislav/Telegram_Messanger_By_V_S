@@ -29,7 +29,7 @@ final class TelegramService {
     init(){
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
         self.api = TdApi(client: client)
-        self.run()
+        run()
     }
     
     // MARK: - Public Method
@@ -39,12 +39,12 @@ final class TelegramService {
             
         do {
             let update = try self.api.decoder.decode(Update.self, from: data)
-            print("NewMessage ")
+          //  print("\n ************* NewMessage *******************\n ")
                 
             try! updatelisterners(update: update)
              
         } catch {
-            print("error decode")
+            print("\n ************* error decode *******************\n ")
         }
         })
     }

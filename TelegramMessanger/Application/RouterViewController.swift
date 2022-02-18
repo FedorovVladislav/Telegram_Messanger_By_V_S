@@ -68,6 +68,7 @@ class RouterViewController: UIViewController, RouterProtocol  {
     }
     
     func chatListVC() {
+        
         let chatVC = appBuilder.createChatListModule(router: self)
         let chatNavVC = UINavigationController(rootViewController: chatVC)
         chatNavVC.tabBarItem.image = UIImage(systemName: "message")
@@ -81,7 +82,7 @@ class RouterViewController: UIViewController, RouterProtocol  {
         tabBarControllerv.setViewControllers([chatNavVC, settingsNavVC], animated: true)
   
         addChild(tabBarControllerv)
-        //tabBarControllerv.view.frame = view.bounds
+        tabBarControllerv.view.frame = view.bounds
         view.addSubview(tabBarControllerv.view)
         tabBarControllerv.didMove(toParent: self)
         current.willMove(toParent: nil)
