@@ -36,16 +36,12 @@ final class TelegramService {
     
     func run() {
         api.client.run(updateHandler: { [self] data in
-            
-        do {
-            let update = try self.api.decoder.decode(Update.self, from: data)
-          //  print("\n ************* NewMessage *******************\n ")
-                
-            try! updatelisterners(update: update)
-             
-        } catch {
-            print("\n ************* error decode *******************\n ")
-        }
+            do {
+                let update = try self.api.decoder.decode(Update.self, from: data)
+                try! updatelisterners(update: update)
+            } catch {
+                print("\n ************* error decode *******************\n ")
+            }
         })
     }
     

@@ -95,6 +95,7 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: ChatTableViewCell.identifier, for: indexPath)  as! ChatTableViewCell
+        
         guard let  chatPos  = chatPos, let  chatDic = chatDic else {
             cell.name.text = "nil"
             return cell
@@ -102,6 +103,54 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
         if  indexPath.row + 1 < chatPos.count {
         let charmodel = chatDic[chatPos[indexPath.row].chatId]
         cell.name.text = charmodel?.title
+            
+            switch charmodel?.lastMessage?.content {
+                
+            case.messageText(let messageText):
+                cell.LastMessage.text = messageText.text.text
+          
+            case .some(.messageAudio(_)):
+                cell.LastMessage.text = "Audio"
+                
+            case .some(.messageDocument(_)):
+                cell.LastMessage.text = "messageDocument"
+                
+            case .some(.messagePhoto(_)):
+                cell.LastMessage.text = "messagePhoto"
+                
+            case .some(.messageSticker(_)):
+                cell.LastMessage.text = "messageSticker"
+                
+            case .some(.messageVideo(_)):
+                cell.LastMessage.text = "messageVideo"
+                
+            case .some(.messageExpiredVideo):
+                cell.LastMessage.text = "messageExpiredVideo"
+                
+            case .some(.messageVoiceNote(_)):
+                cell.LastMessage.text = "messageVoiceNote"
+                
+            case .some(.messageLocation(_)):
+                cell.LastMessage.text = "messageLocation"
+                
+            case .some(.messageContact(_)):
+                cell.LastMessage.text = "messageContact"
+                
+            case .some(.messageAnimatedEmoji(_)):
+                cell.LastMessage.text = "messageAnimatedEmoji"
+       
+            case .some(.messagePoll(_)):
+                cell.LastMessage.text = "messagePoll"
+                
+            case .some(.messageInvoice(_)):
+                cell.LastMessage.text = "messageInvoice"
+                
+            case .some(.messageCall(_)):
+                cell.LastMessage.text = "messageCall"
+                
+            default:
+                cell.LastMessage.text = "other"
+            }
         }
             return cell
     }
