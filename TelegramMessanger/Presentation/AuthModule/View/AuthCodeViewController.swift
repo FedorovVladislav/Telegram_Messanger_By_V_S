@@ -41,6 +41,7 @@ class AuthCodeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Insert Code"
+        view.backgroundColor =  .black
         
         codeTextFueld.delegate = self
 

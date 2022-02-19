@@ -89,7 +89,6 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
    
         return chatPos?.count ?? 10
-
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -155,14 +154,14 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
             return cell
     }
     
-    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let vc = ChatViewController()
-        //vc.chatId = ServiceManager.shared.chatListService.chatList[indexPath.row].chat.id
-        self.show(vc, sender: nil)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let chatPos = chatPos else { return }
+        
+       // let vc = UIViewController()
+        //vc.view.backgroundColor = .green
+       // navigationController?.show(vc, sender: nil)
+        presenter.openChat(chatID: chatPos[indexPath.row].chatId, source: self)
     }
-//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableView.automaticDimension
-//    }
 }
 
 

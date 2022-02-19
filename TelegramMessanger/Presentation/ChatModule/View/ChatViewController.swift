@@ -10,18 +10,15 @@ import UIKit
 
 class ChatViewController: UIViewController {
     
-    var chatId: Int64 = 0
-    
+    var presenter: ChatPresenterProtocol!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "\(chatId)"
-        updateMess()
+        view.backgroundColor =  .white
     }
-    
-    func updateMess(){
-        print("*** OpenChat ***")
-//        try! ServiceManager.shared.telegramService.api.getChat(chatId: chatId, completion: {res  in
-//        })
+}
+extension ChatViewController: ChatViewProtocol {
+    func showMessahe() {
+        
     }
-    
 }

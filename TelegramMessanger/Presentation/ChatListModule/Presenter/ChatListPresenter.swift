@@ -8,6 +8,7 @@
 
 import Foundation
 import TdlibKit
+import UIKit
 
 protocol ChatListViewProtocol: class {
     func updateTableList(chatDic: [Int64 : ChatModel], chatPos: [ChatPositionlist])
@@ -15,7 +16,7 @@ protocol ChatListViewProtocol: class {
 }
 protocol ChatListPresenterProtocol: class {
     init(view: ChatListViewProtocol, router: RouterProtocol, networkLayer: ChatListService)
-    func openChat(chatID: Int64)
+    func openChat(chatID: Int64, source: UIViewController)
     func getContact()
 }
 
@@ -41,7 +42,8 @@ class ChatListPresenter: ChatListPresenterProtocol {
         networkLayer.delegate = self
     }
     
-    func openChat(chatID: Int64) {
+    func openChat(chatID: Int64, source: UIViewController) {
+        router.chatVC(chatId: chatID, source: source)
         print(chatID)
     }
     
@@ -50,6 +52,4 @@ extension ChatListPresenter: ChatListDelegate {
     func updateChatList(chatDic: [Int64 : ChatModel], chatPos: [ChatPositionlist]) {
         view.updateTableList(chatDic: chatDic, chatPos: chatPos)
     }
-    
-    
 }

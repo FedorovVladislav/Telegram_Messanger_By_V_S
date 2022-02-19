@@ -19,18 +19,39 @@ protocol RouterProtocol: Router {
    // func contactVC()
     func chatListVC()
     func popBack()
-    //func chatVC()
+    func chatVC(chatId: Int64, source: UIViewController)
     //func settingVC()
     func start()
 }
 
 class RouterViewController: UIViewController, RouterProtocol  {
     
+    func chatVC(chatId: Int64, source: UIViewController) {
+        let vc = appBuilder.createChatModule(router: self, chatID: chatId)
+        
+        source.navigationController?.show(vc, sender: nil)
+      //  let vc = appBuilder.createAuthCodeModule(router: self)
+//        if let nav =  current.navigationController {
+//            print("****** get navi ******")
+//            nav.show(vc, sender:  nil)
+//        }
+//        if let tabbabt = current.navigationController?.viewControllers.first as? ChatViewController {
+//            print("****** cast good ******")
+//            tabbabt.navigationController?.show(vc, sender: nil)
+//        } else  {
+//            print("****** cant cast good ******")
+//        }
+//        let vc = appBuilder.createAuthCodeModule(router: self)
+//        current.show(vc, sender: nil)
+    }
+
     private var tabBarControllerv : UITabBarController = {
         let vc = UITabBarController()
-        vc.tabBar.barTintColor = .darkGray
+      //  vc.tabBar.barTintColor = .darkGray
+        vc.tabBar.barStyle = .black
         return vc
     }()
+    
     var current = UIViewController()
     var appBuilder = AssemblyModelBuilder()
     
@@ -56,6 +77,8 @@ class RouterViewController: UIViewController, RouterProtocol  {
     func authNumberVC() {
         let vc = appBuilder.createAuthNumberModule(router: self)
         let navVC = UINavigationController(rootViewController: vc)
+        navVC.modalPresentationStyle = .fullScreen
+        navVC.navigationBar.tintColor = .white
         
         addChild(navVC)
         //navVC.view.frame = view.bounds
@@ -71,16 +94,19 @@ class RouterViewController: UIViewController, RouterProtocol  {
         
         let chatVC = appBuilder.createChatListModule(router: self)
         let chatNavVC = UINavigationController(rootViewController: chatVC)
+        chatNavVC.modalPresentationStyle = .fullScreen
         chatNavVC.tabBarItem.image = UIImage(systemName: "message")
+        
         chatNavVC.tabBarItem.title = "Chats"
 
         let settingsVC = appBuilder.createSettingsModule(router: self)
         let settingsNavVC = UINavigationController(rootViewController: settingsVC)
+        settingsNavVC.modalPresentationStyle = .fullScreen
         settingsNavVC.tabBarItem.image = UIImage(systemName: "gearshape")
         settingsNavVC.tabBarItem.title = "Settings"
     
         tabBarControllerv.setViewControllers([chatNavVC, settingsNavVC], animated: true)
-  
+       
         addChild(tabBarControllerv)
         tabBarControllerv.view.frame = view.bounds
         view.addSubview(tabBarControllerv.view)

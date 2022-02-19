@@ -17,13 +17,21 @@ class ChatService {
     
     init(tdApi: TdApi){
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
-        self.api = TdApi(client: client)
+        self.api = tdApi
     }
+    
+    func getChatMess(chatId: Int64) {
+       try! api.getChat(chatId:chatId, completion: { result  in
+            
+            
+        })
+        
+    }
+
 }
 extension ChatService: UpdateListeners {
     func updateData(update: Update) {
       
-        
         switch update{
         /// A new message was received; can also be an outgoing message
         case .updateNewMessage(let updateNewMessage):

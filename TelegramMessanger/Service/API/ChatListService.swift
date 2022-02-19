@@ -1,11 +1,3 @@
-//
-//  ChatListService.swift
-//  tdlib-ios
-//
-//  Created by Елизавета Федорова on 11.02.2022.
-//  Copyright © 2022 Anton Glezman. All rights reserved.
-//
-
 import Foundation
 import TdlibKit
 
@@ -21,25 +13,19 @@ struct ChatPositionlist {
         self.chatId = chatId
         self.position = position
     }
-  
 }
 
 class ChatListService {
     let api: TdApi
     var delegate: ChatListDelegate?
     
-    var chatList: [UpdateNewChat]  = [] {
-        didSet {
-            print ("ChatList changed")
-        }
-    }
     var  chat: [Chat] = []
     
     var chatDic = [Int64: ChatModel]()
     
     var chatPos: [ChatPositionlist] = [] {
         didSet {
-            chatPos.sorted { firstElement, secondElenet in
+            chatPos =  chatPos.sorted { firstElement, secondElenet in
                 return firstElement.position > secondElenet.position
             }
             delegate?.updateChatList(chatDic: chatDic, chatPos: chatPos)
@@ -72,9 +58,9 @@ class ChatListService {
 }
 extension ChatListService: UpdateListeners {
     
-    func updateData(update: Update) {
+    func updateData (update: Update) {
         
-        switch update{
+        switch update {
         
         /// A new chat has been loaded/created. This update is guaranteed to come before the chat identifier is returned to the application. The chat field changes will be reported through separate updates
         case .updateNewChat(let newChat):
