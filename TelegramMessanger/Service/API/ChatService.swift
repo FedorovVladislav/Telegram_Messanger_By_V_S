@@ -1,17 +1,14 @@
-//
-//  ChatService.swift
-//  tdlib-ios
-//
-//  Created by Елизавета Федорова on 11.02.2022.
-//  Copyright © 2022 Anton Glezman. All rights reserved.
-//
-
 import Foundation
 import TdlibKit
 
+protocol messDataDelegate {
+  func  messData(updateData: [Message])
+}
+
 class ChatService {
-    
+    var delegate:  messDataDelegate?
     let api: TdApi
+    var chatID: Int64 = 0
 
     // MARK: - Init
     
@@ -19,13 +16,33 @@ class ChatService {
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
         self.api = tdApi
     }
+    var mess: [Message] = []{
+        didSet {
+            print("****** mess: \(mess)")
+            if mess.count < 20 {
+                if let lastmess = mess.last?.id {
+                    getChatMess(chatId: chatID, lastMess: lastmess)
+                }
+            } else {
+                delegate?.messData(updateData: mess)
+            }
+        }
+    }
     
-    func getChatMess(chatId: Int64) {
-       try! api.getChat(chatId:chatId, completion: { result  in
-            
-            
+    func getChatMess(chatId: Int64, lastMess: Int64) {
+        self.chatID = chatId
+        try! api.getChatHistory(chatId: chatId, fromMessageId: lastMess, limit: 50, offset: nil, onlyLocal: false, completion: {
+            result  in
+            switch result{
+                
+            case .success(_):
+                print("Succes")
+                let mes = try! result.get().messages
+                self.mess =  mes ?? []
+            case .failure(_):
+                print("failure")
+            }
         })
-        
     }
 
 }
@@ -33,6 +50,17 @@ extension ChatService: UpdateListeners {
     func updateData(update: Update) {
       
         switch update{
+            
+        case .updateChatLastMessage(let updateChatLastMessage):
+          
+            if  chatID == updateChatLastMessage.chatId {
+            
+            }
+            
+            if let lastMessage = updateChatLastMessage.lastMessage {
+                getChatMess(chatId: chatID, lastMess: lastMessage.id)
+            }
+            
         /// A new message was received; can also be an outgoing message
         case .updateNewMessage(let updateNewMessage):
             print("******** updateNewMessage *******")

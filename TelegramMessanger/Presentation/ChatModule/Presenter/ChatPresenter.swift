@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import  TdlibKit
 
 protocol ChatViewProtocol {
-    func showMessahe()
+    func showMessahe(data: [Message])
 }
 
 protocol ChatPresenterProtocol {
-    init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64)
+    init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64, lastMess: Int64)
     var view: ChatViewProtocol { get }
     var router: RouterProtocol  { get }
     var networkLayer: ChatService { get }
@@ -26,14 +27,21 @@ class ChatPresenter: ChatPresenterProtocol {
     let networkLayer: ChatService
     var chatId: Int64
  
-    required init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64) {
+    required init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64,  lastMess: Int64) {
         self.view = view
         self.router = router
         self.networkLayer = networkLayer
         self.chatId = chatId
         
-        networkLayer.getChatMess(chatId: chatId)
+        networkLayer.getChatMess(chatId: chatId, lastMess: lastMess)
+        networkLayer.delegate = self
+    }
+}
+extension ChatPresenter: messDataDelegate {
+    func messData(updateData: [Message]) {
+        view.showMessahe(data: updateData )
     }
     
+    
+    
 }
-

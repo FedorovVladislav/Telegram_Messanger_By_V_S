@@ -15,4 +15,5 @@ struct ChatModel {
 //    }
     var title: String
     var lastMessage: Message?
+    var lastMessId:Int64?
 }

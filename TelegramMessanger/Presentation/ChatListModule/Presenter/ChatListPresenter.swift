@@ -12,24 +12,15 @@ import UIKit
 
 protocol ChatListViewProtocol: class {
     func updateTableList(chatDic: [Int64 : ChatModel], chatPos: [ChatPositionlist])
-    
 }
+
 protocol ChatListPresenterProtocol: class {
     init(view: ChatListViewProtocol, router: RouterProtocol, networkLayer: ChatListService)
-    func openChat(chatID: Int64, source: UIViewController)
+    func openChat(chatID: Int64, lastMess: Int64)
     func getContact()
 }
 
-
-
 class ChatListPresenter: ChatListPresenterProtocol {
-    
-    
-    func getContact() {
-        print("***ButtonWork***")
-        networkLayer.getContact()
-    }
-    
     let view: ChatListViewProtocol
     let router: RouterProtocol
     let networkLayer: ChatListService
@@ -42,12 +33,17 @@ class ChatListPresenter: ChatListPresenterProtocol {
         networkLayer.delegate = self
     }
     
-    func openChat(chatID: Int64, source: UIViewController) {
-        router.chatVC(chatId: chatID, source: source)
-        print(chatID)
+    func getContact() {
+        print("***ButtonWork***")
+        networkLayer.getContact()
     }
     
+    func openChat(chatID: Int64, lastMess: Int64) {
+        router.chatVC(chatId: chatID, lastMess: lastMess )
+        print(chatID)
+    }
 }
+
 extension ChatListPresenter: ChatListDelegate {
     func updateChatList(chatDic: [Int64 : ChatModel], chatPos: [ChatPositionlist]) {
         view.updateTableList(chatDic: chatDic, chatPos: chatPos)

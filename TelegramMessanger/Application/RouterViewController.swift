@@ -19,30 +19,24 @@ protocol RouterProtocol: Router {
    // func contactVC()
     func chatListVC()
     func popBack()
-    func chatVC(chatId: Int64, source: UIViewController)
+    func chatVC(chatId: Int64, lastMess: Int64)
     //func settingVC()
     func start()
 }
 
 class RouterViewController: UIViewController, RouterProtocol  {
     
-    func chatVC(chatId: Int64, source: UIViewController) {
-        let vc = appBuilder.createChatModule(router: self, chatID: chatId)
+    func chatVC(chatId: Int64, lastMess: Int64) {
         
-        source.navigationController?.show(vc, sender: nil)
-      //  let vc = appBuilder.createAuthCodeModule(router: self)
-//        if let nav =  current.navigationController {
-//            print("****** get navi ******")
-//            nav.show(vc, sender:  nil)
-//        }
-//        if let tabbabt = current.navigationController?.viewControllers.first as? ChatViewController {
-//            print("****** cast good ******")
-//            tabbabt.navigationController?.show(vc, sender: nil)
-//        } else  {
-//            print("****** cant cast good ******")
-//        }
-//        let vc = appBuilder.createAuthCodeModule(router: self)
-//        current.show(vc, sender: nil)
+        let vc = appBuilder.createChatModule(router: self, chatID: chatId, lastMess: lastMess)
+        
+        guard let nv = self.current.children.first else { return }
+        nv.show(vc, sender: nil)
+          
+    }
+    
+    func chatVC(chatId: Int64, lastMess: Int64, source: UIViewController) {
+        
     }
 
     private var tabBarControllerv : UITabBarController = {
@@ -67,6 +61,7 @@ class RouterViewController: UIViewController, RouterProtocol  {
         //current.view.frame = view.bounds
         view.addSubview(current.view)
         current.didMove(toParent: self)
+        
     }
     
     func authCodeVC() {
@@ -91,12 +86,11 @@ class RouterViewController: UIViewController, RouterProtocol  {
     }
     
     func chatListVC() {
-        
+
         let chatVC = appBuilder.createChatListModule(router: self)
         let chatNavVC = UINavigationController(rootViewController: chatVC)
         chatNavVC.modalPresentationStyle = .fullScreen
         chatNavVC.tabBarItem.image = UIImage(systemName: "message")
-        
         chatNavVC.tabBarItem.title = "Chats"
 
         let settingsVC = appBuilder.createSettingsModule(router: self)
@@ -105,10 +99,12 @@ class RouterViewController: UIViewController, RouterProtocol  {
         settingsNavVC.tabBarItem.image = UIImage(systemName: "gearshape")
         settingsNavVC.tabBarItem.title = "Settings"
     
+      
+        
         tabBarControllerv.setViewControllers([chatNavVC, settingsNavVC], animated: true)
        
         addChild(tabBarControllerv)
-        tabBarControllerv.view.frame = view.bounds
+        //tabbar.view.frame = view.bounds
         view.addSubview(tabBarControllerv.view)
         tabBarControllerv.didMove(toParent: self)
         current.willMove(toParent: nil)

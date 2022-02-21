@@ -70,7 +70,7 @@ extension ChatListService: UpdateListeners {
                 let chatpos = newChat.chat.positions
                 print("***** addNewItem ******* ")
                 
-                chatDic[newChat.chat.id] = ChatModel(title: newChat.chat.title, lastMessage: newChat.chat.lastMessage)
+                chatDic[newChat.chat.id] = ChatModel(title: newChat.chat.title, lastMessage: newChat.chat.lastMessage, lastMessId: newChat.chat.lastMessage?.id)
             }
         /// The title of a chat was changed
         case .updateChatTitle(let updateChatTitle):
@@ -88,7 +88,7 @@ extension ChatListService: UpdateListeners {
             print("***** updateChatLastMessage  \(updateChatLastMessage)*******")
             
             let chatID = updateChatLastMessage.chatId
-            
+           
             if let chatPositions = updateChatLastMessage.positions.first?.order.rawValue {
                 for ( index, chat )in chatPos.enumerated() {
                     if chatID == chat.chatId {
@@ -101,6 +101,7 @@ extension ChatListService: UpdateListeners {
             
             if let lastMessage = updateChatLastMessage.lastMessage {
                 chatDic[chatID]?.lastMessage = lastMessage
+                chatDic[chatID]?.lastMessId  = lastMessage.id
                 delegate?.updateChatList(chatDic: chatDic, chatPos: chatPos)
             }
             

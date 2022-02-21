@@ -10,23 +10,13 @@ import UIKit
 import TdlibKit
 
 class ChatListViewController: UIViewController {
-    
-    init(){
-        super.init(nibName: nil, bundle: nil)
-        print("************* ChatListViewController init *************")
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+        
     let chatTable: UITableView = {
         let tableView = UITableView()
         tableView.register(ChatTableViewCell.self, forCellReuseIdentifier: ChatTableViewCell.identifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .black
         tableView.rowHeight =  60
-        
         
         return tableView
     }()
@@ -160,7 +150,14 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
        // let vc = UIViewController()
         //vc.view.backgroundColor = .green
        // navigationController?.show(vc, sender: nil)
-        presenter.openChat(chatID: chatPos[indexPath.row].chatId, source: self)
+        print ("****** chat ID \(chatPos[indexPath.row].chatId)")
+        if  indexPath.row + 1 < chatPos.count {
+            let charmodel = chatDic?[chatPos[indexPath.row].chatId]
+            guard let lastMess = charmodel?.lastMessId else { return }
+            
+           // presenter.openChat(chatID: chatPos[indexPath.row].chatId, source: self, lastMess: lastMess)
+            presenter.openChat(chatID: chatPos[indexPath.row].chatId, lastMess: 0)
+        }
     }
 }
 
