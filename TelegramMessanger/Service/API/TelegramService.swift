@@ -32,8 +32,8 @@ final class TelegramService {
         run()
     }
     deinit{
-       // print("**** Deinit *****")
-        //
+        print("**** Deinit *****")
+        
     }
     
     // MARK: - Public Method
