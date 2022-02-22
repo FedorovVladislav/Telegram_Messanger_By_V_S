@@ -18,19 +18,19 @@ protocol AssemblyBuilderProtocol {
 }
 
 class AssemblyModelBuilder: AssemblyBuilderProtocol {
-    func createChatModule(router: RouterProtocol, chatID: Int64, lastMess: Int64) -> UIViewController {
-        let view = ChatViewController()
-        let presenter = ChatPresenter(view: view, router: router, networkLayer: serviceManager.chatService, chatId: chatID, lastMess: lastMess)
-        view.presenter = presenter
-        return  view
-    }
-    
     
     private let serviceManager = ServiceManager()
     
     func createSettingsModule(router: RouterProtocol) -> UIViewController {
         let view = SettingsViewController()
         let presenter = SettingsPresenter(view: view, router: router, networkManadger: serviceManager.authService)
+        view.presenter = presenter
+        return  view
+    }
+    
+    func createChatModule(router: RouterProtocol, chatID: Int64, lastMess: Int64) -> UIViewController {
+        let view = ChatViewController()
+        let presenter = ChatPresenter(view: view, router: router, networkLayer: serviceManager.chatService, chatId: chatID, lastMess: lastMess)
         view.presenter = presenter
         return  view
     }

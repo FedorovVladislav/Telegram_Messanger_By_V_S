@@ -18,7 +18,6 @@ protocol ChatPresenterProtocol {
     var view: ChatViewProtocol { get }
     var router: RouterProtocol  { get }
     var networkLayer: ChatService { get }
-    
 }
 
 class ChatPresenter: ChatPresenterProtocol {
@@ -41,7 +40,4 @@ extension ChatPresenter: messDataDelegate {
     func messData(updateData: [Message]) {
         view.showMessahe(data: updateData )
     }
-    
-    
-    
 }

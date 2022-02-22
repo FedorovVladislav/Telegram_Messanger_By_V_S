@@ -16,11 +16,11 @@ struct messagee: MessageType {
     var sentDate: MessageKit.Date
     var kind: MessageKind
     
-    init(){
+    init(text: String){
         sender = sendertype()
         messageId = "messageID"
         sentDate = MessageKit.Date(timeIntervalSinceNow: 1)
-        kind = .text("text")
+        kind = .text(text)
     }
 }
 
@@ -38,7 +38,7 @@ class ChatViewController: MessagesViewController {
     
     var presenter: ChatPresenterProtocol!
     
-    private var messages: [messagee] = [messagee(), messagee(), messagee(), messagee(), messagee()]
+    private var messages: [messagee] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +47,7 @@ class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.backgroundColor = .black
+        title = "Chat"
     }
     private func removeMessageAvatars() {
       guard
@@ -106,11 +107,19 @@ extension ChatViewController: MessagesDisplayDelegate {
       }
 }
 
-
 extension ChatViewController: ChatViewProtocol {
     func showMessahe(data: [Message]) {
-      //  self.mess = data
-        //chatTable.reloadData()
+        var res: [messagee] = []
+        for mes in data{
+            switch mes.content {
+            case .messageText(let  textMes):
+                res.append(messagee(text: textMes.text.text))
+            default:
+                res.append(messagee(text: "Content"))
+            }
+        }
+        self.messages =  res
+        messagesCollectionView.reloadData()
     }
 }
 

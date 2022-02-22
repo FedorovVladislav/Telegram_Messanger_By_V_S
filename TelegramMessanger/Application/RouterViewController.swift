@@ -1,11 +1,3 @@
-//
-//  RootViewController.swift
-//  tdlib-ios
-//
-//  Created by Елизавета Федорова on 16.02.2022.
-//  Copyright © 2022 Anton Glezman. All rights reserved.
-//
-
 import UIKit
 
 protocol Router {
@@ -16,7 +8,7 @@ protocol Router {
 protocol RouterProtocol: Router {
     func authCodeVC()
     func authNumberVC()
-   // func contactVC()
+    //func contactVC()
     func chatListVC()
     func popBack()
     func chatVC(chatId: Int64, lastMess: Int64)
@@ -24,27 +16,7 @@ protocol RouterProtocol: Router {
     func start()
 }
 
-class RouterViewController: UIViewController, RouterProtocol  {
-    
-    func chatVC(chatId: Int64, lastMess: Int64) {
-        
-        let vc = appBuilder.createChatModule(router: self, chatID: chatId, lastMess: lastMess)
-        
-        guard let nv = self.current.children.first else { return }
-        nv.show(vc, sender: nil)
-          
-    }
-    
-    func chatVC(chatId: Int64, lastMess: Int64, source: UIViewController) {
-        
-    }
-
-    private var tabBarControllerv : UITabBarController = {
-        let vc = UITabBarController()
-      //  vc.tabBar.barTintColor = .darkGray
-        vc.tabBar.barStyle = .black
-        return vc
-    }()
+class RouterViewController: UIViewController, RouterProtocol {
     
     var current = UIViewController()
     var appBuilder = AssemblyModelBuilder()
@@ -56,12 +28,10 @@ class RouterViewController: UIViewController, RouterProtocol  {
     
     func start() {
         current = appBuilder.createLoadingModule(router: self)
-        
         addChild(current)
         //current.view.frame = view.bounds
         view.addSubview(current.view)
         current.didMove(toParent: self)
-        
     }
     
     func authCodeVC() {
@@ -69,52 +39,66 @@ class RouterViewController: UIViewController, RouterProtocol  {
         current.show(vc, sender: nil)
     }
     
+    func chatVC(chatId: Int64, lastMess: Int64) {
+        
+        let vc = appBuilder.createChatModule(router: self, chatID: chatId, lastMess: lastMess)
+        
+        guard let nv = self.current.children.first else { return }
+        nv.show(vc, sender: nil)
+
+    }
+    
     func authNumberVC() {
         let vc = appBuilder.createAuthNumberModule(router: self)
-        let navVC = UINavigationController(rootViewController: vc)
-        navVC.modalPresentationStyle = .fullScreen
-        navVC.navigationBar.tintColor = .white
-        
-        addChild(navVC)
-        //navVC.view.frame = view.bounds
-        view.addSubview(navVC.view)
-        navVC.didMove(toParent: self)
-        current.willMove(toParent: nil)
-        current.view.removeFromSuperview()
-        current.removeFromParent()
-        current = navVC
+        let navVC = createNavigaionVC(vc: vc, tabBarImage: nil, tabBarTitle: nil)
+        changeCurrentVC(vc: navVC)
     }
     
     func chatListVC() {
-
-        let chatVC = appBuilder.createChatListModule(router: self)
-        let chatNavVC = UINavigationController(rootViewController: chatVC)
-        chatNavVC.modalPresentationStyle = .fullScreen
-        chatNavVC.tabBarItem.image = UIImage(systemName: "message")
-        chatNavVC.tabBarItem.title = "Chats"
-
-        let settingsVC = appBuilder.createSettingsModule(router: self)
-        let settingsNavVC = UINavigationController(rootViewController: settingsVC)
-        settingsNavVC.modalPresentationStyle = .fullScreen
-        settingsNavVC.tabBarItem.image = UIImage(systemName: "gearshape")
-        settingsNavVC.tabBarItem.title = "Settings"
+        let chatNavVC       = createNavigaionVC(vc: appBuilder.createChatListModule(router: self),
+                                                tabBarImage: UIImage(systemName: "message"),
+                                                tabBarTitle: "Chats")
     
-      
-        
-        tabBarControllerv.setViewControllers([chatNavVC, settingsNavVC], animated: true)
-       
-        addChild(tabBarControllerv)
-        //tabbar.view.frame = view.bounds
-        view.addSubview(tabBarControllerv.view)
-        tabBarControllerv.didMove(toParent: self)
-        current.willMove(toParent: nil)
-        current.view.removeFromSuperview()
-        current.removeFromParent()
-        current = tabBarControllerv
+        let settingsNavVC   = createNavigaionVC(vc: appBuilder.createSettingsModule(router: self),
+                                                tabBarImage: UIImage(systemName: "gearshape"),
+                                                tabBarTitle:  "Settings")
+        let tabBarVC = UITabBarController()
+        tabBarVC.tabBar.barStyle = .black
+        tabBarVC.setViewControllers([chatNavVC, settingsNavVC], animated: true)
+        changeCurrentVC(vc: tabBarVC)
     }
     
     func popBack() {
         current.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    private func changeCurrentVC(vc newVC: UIViewController) {
+        addChild(newVC)
+        //tabbar.view.frame = view.bounds
+        view.addSubview(newVC.view)
+        newVC.didMove(toParent: self)
+        current.willMove(toParent: nil)
+        current.view.removeFromSuperview()
+        current.removeFromParent()
+        current = newVC
+        
+}
+    
+    private func createNavigaionVC(vc newVC: UIViewController, tabBarImage: UIImage?, tabBarTitle: String?) -> UINavigationController {
+       
+        let navVC = UINavigationController(rootViewController: newVC)
+        navVC.modalPresentationStyle = .fullScreen
+        navVC.navigationBar.barStyle = .black
+        
+        if let tabBarImage = tabBarImage {
+            navVC.tabBarItem.image = tabBarImage
+        }
+        
+        if let tabBarTitle = tabBarTitle {
+            navVC.tabBarItem.title = tabBarTitle
+        }
+        
+        return navVC
     }
 }
     

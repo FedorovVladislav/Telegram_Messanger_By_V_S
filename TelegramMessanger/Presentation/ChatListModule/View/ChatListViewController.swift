@@ -29,11 +29,9 @@ class ChatListViewController: UIViewController {
     }()
    
     var presenter: ChatListPresenter!
-    
+
     var chatData: [UpdateNewChat]?
-    
-    var chatDic: [Int64 : ChatModel]?
-        
+    var chatDic: [Int64:ChatModel]?
     var chatPos: [ChatPositionlist]?
     
     override func viewDidLoad() {
@@ -85,13 +83,15 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: ChatTableViewCell.identifier, for: indexPath)  as! ChatTableViewCell
         
-        guard let  chatPos  = chatPos, let  chatDic = chatDic else {
+        guard let chatPos = chatPos, let chatDic = chatDic else {
             cell.name.text = "nil"
             return cell
         }
+        
         if  indexPath.row + 1 < chatPos.count {
-        let charmodel = chatDic[chatPos[indexPath.row].chatId]
-        cell.name.text = charmodel?.title
+            
+            let charmodel = chatDic[chatPos[indexPath.row].chatId]
+            cell.name.text = charmodel?.title
             
             switch charmodel?.lastMessage?.content {
                 
@@ -141,7 +141,8 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
                 cell.LastMessage.text = "other"
             }
         }
-            return cell
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
