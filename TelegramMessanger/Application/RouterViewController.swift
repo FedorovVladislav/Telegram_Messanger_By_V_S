@@ -18,6 +18,8 @@ protocol RouterProtocol: Router {
 
 class RouterViewController: UIViewController, RouterProtocol {
     
+    print("Lolllllll")
+    
     var current = UIViewController()
     var appBuilder = AssemblyModelBuilder()
     
