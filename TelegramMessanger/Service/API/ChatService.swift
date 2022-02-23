@@ -1,5 +1,6 @@
 import Foundation
 import TdlibKit
+import CoreImage
 
 protocol messDataDelegate {
   func  messData(updateData: [Message])
@@ -8,35 +9,41 @@ protocol messDataDelegate {
 class ChatService {
     var delegate:  messDataDelegate?
     let api: TdApi
-    var chatID: Int64 = 0
+    var chatId: Int64 = 0
+    var userId: Int64 = 0
+    var mess: [Message] = []{
+        didSet {
+            mess.sort { mess1, mess2 in
+                mess1.id < mess2.id
+            }
+            delegate?.messData(updateData: mess)
+        }
+    }
 
     // MARK: - Init
     
-    init(tdApi: TdApi){
+    init(tdApi: TdApi) {
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
         self.api = tdApi
     }
-    var mess: [Message] = []{
-        didSet {
-            print("****** mess: \(mess)")
-            if mess.count < 20 {
-                if let lastmess = mess.last?.id {
-                    getChatMess(chatId: chatID, lastMess: lastmess)
-                }
-            } else {
-                delegate?.messData(updateData: mess)
-            }
-        }
-    }
     
+    func sendMess(text: String){
+        //let textEntity = TextEntity(length: 10, offset: 1, type: .textEntityTypeBold)
+        let formattedText = FormattedText(entities: [], text: text)
+        let inputMessageText =  InputMessageText.init(clearDraft: false, disableWebPagePreview: false, text: formattedText)
+        let inputMessageContent = InputMessageContent.inputMessageText(inputMessageText)
+        
+        try! api.sendMessage(chatId: self.chatId, inputMessageContent: inputMessageContent, messageThreadId: nil, options: nil, replyMarkup: nil, replyToMessageId: nil, completion: {  res in
+            print("****res \(res)")
+        })
+    }
     func getChatMess(chatId: Int64, lastMess: Int64) {
-        self.chatID = chatId
-        try! api.getChatHistory(chatId: chatId, fromMessageId: lastMess, limit: 50, offset: nil, onlyLocal: false, completion: {
+        self.chatId = chatId
+        try! api.getChatHistory(chatId: chatId, fromMessageId: nil, limit: 50, offset: nil, onlyLocal: false, completion: {
             result  in
             switch result{
                 
             case .success(_):
-                print("Succes")
                 let mes = try! result.get().messages
                 self.mess =  mes ?? []
             case .failure(_):
@@ -44,21 +51,15 @@ class ChatService {
             }
         })
     }
-
 }
 extension ChatService: UpdateListeners {
     func updateData(update: Update) {
       
-        switch update{
+        switch update {
             
         case .updateChatLastMessage(let updateChatLastMessage):
-          
-            if  chatID == updateChatLastMessage.chatId {
-            
-            }
-            
             if let lastMessage = updateChatLastMessage.lastMessage {
-                getChatMess(chatId: chatID, lastMess: lastMessage.id)
+                getChatMess(chatId: chatId, lastMess: lastMessage.id)
             }
             
         /// A new message was received; can also be an outgoing message
@@ -94,6 +95,21 @@ extension ChatService: UpdateListeners {
         /// A message with a live location was viewed. When the update is received, the application is supposed to update the live location
         case .updateMessageLiveLocationViewed(let updateMessageLiveLocationViewed):
             print("******** updateMessageLiveLocationViewed *******")
+            
+        case .updateUser(let updateUser):
+            print("******** updateUser *******")
+
+        case .updateOption(let updateOption):
+            if updateOption.name == "my_id" {
+                
+                switch updateOption.value {
+                case.optionValueInteger(let op):
+                    self.userId = op.value.rawValue
+            
+                default:
+                    break
+                }
+            }
         default:
             break
         }

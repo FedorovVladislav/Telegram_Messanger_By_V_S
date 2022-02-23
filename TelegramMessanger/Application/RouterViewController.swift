@@ -18,8 +18,6 @@ protocol RouterProtocol: Router {
 
 class RouterViewController: UIViewController, RouterProtocol {
     
-    print("Lolllllll")
-    
     var current = UIViewController()
     var appBuilder = AssemblyModelBuilder()
     
@@ -42,7 +40,6 @@ class RouterViewController: UIViewController, RouterProtocol {
     }
     
     func chatVC(chatId: Int64, lastMess: Int64) {
-        
         let vc = appBuilder.createChatModule(router: self, chatID: chatId, lastMess: lastMess)
         
         guard let nv = self.current.children.first else { return }
@@ -83,8 +80,7 @@ class RouterViewController: UIViewController, RouterProtocol {
         current.view.removeFromSuperview()
         current.removeFromParent()
         current = newVC
-        
-}
+    }
     
     private func createNavigaionVC(vc newVC: UIViewController, tabBarImage: UIImage?, tabBarTitle: String?) -> UINavigationController {
        

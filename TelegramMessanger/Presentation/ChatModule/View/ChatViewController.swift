@@ -9,6 +9,7 @@
 import UIKit
 import MessageKit
 import TdlibKit
+import InputBarAccessoryView
 
 struct messagee: MessageType {
     var sender: SenderType
@@ -16,8 +17,8 @@ struct messagee: MessageType {
     var sentDate: MessageKit.Date
     var kind: MessageKind
     
-    init(text: String){
-        sender = sendertype()
+    init(text: String, userId: Int64){
+        sender = sendertype(senderId: userId)
         messageId = "messageID"
         sentDate = MessageKit.Date(timeIntervalSinceNow: 1)
         kind = .text(text)
@@ -27,26 +28,31 @@ struct messagee: MessageType {
 struct sendertype: SenderType {
     var senderId: String
     var displayName: String
+
     
-    init (){
-        senderId = "pol"
+    init (senderId: Int64){
+        self.senderId = "\(senderId)"
         displayName = "hol"
     }
 }
 
 class ChatViewController: MessagesViewController {
     
-    var presenter: ChatPresenterProtocol!
     
+    
+    var presenter: ChatPresenterProtocol!
+    var senderId: String = "\(883411616)"
     private var messages: [messagee] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         removeMessageAvatars()
+        messageInputBar.delegate = self
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.backgroundColor = .black
+    
         title = "Chat"
     }
     private func removeMessageAvatars() {
@@ -74,7 +80,10 @@ class ChatViewController: MessagesViewController {
 extension ChatViewController: MessagesDataSource {
     
     func currentSender() -> SenderType {
-        return sendertype()
+        return sendertype(senderId: 883411616)
+    }
+    func isFromCurrentSender(message: MessageType) -> Bool {
+        return message.sender.senderId == self.senderId ? true : false
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -98,28 +107,63 @@ extension ChatViewController: MessagesLayoutDelegate {
 
 extension ChatViewController: MessagesDisplayDelegate {
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return .systemBlue
+        return isFromCurrentSender(message: message) ?  .systemBlue : .darkGray
     }
     
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
         let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
         return .bubbleTail(corner, .curved)
       }
+    func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        return .white
+    }
+}
+
+extension ChatViewController: InputBarAccessoryViewDelegate {
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        print( "***** didPressSendButtonWith ****")
+        inputBar.inputTextView.text = ""
+        presenter.networkLayer.sendMess(text: text)
+    }
+    
+    func inputBar(_ inputBar: InputBarAccessoryView, didChangeIntrinsicContentTo size: CGSize) {
+        print( "***** didChangeIntrinsicContentTo ****")
+    }
+    
+    func inputBar(_ inputBar: InputBarAccessoryView, textViewTextDidChangeTo text: String) {
+        print( "***** textViewTextDidChangeTo ****")
+    }
+    
+    func inputBar(_ inputBar: InputBarAccessoryView, didSwipeTextViewWith gesture: UISwipeGestureRecognizer) {
+        print( "***** didSwipeTextViewWith ****")
+    }
 }
 
 extension ChatViewController: ChatViewProtocol {
     func showMessahe(data: [Message]) {
         var res: [messagee] = []
         for mes in data{
+            var  senderId: Int64 = 0
+            switch mes.senderId {
+                
+            case .messageSenderUser(let sender):
+                senderId = sender.userId
+            case .messageSenderChat(_):
+                break
+            }
+            
             switch mes.content {
             case .messageText(let  textMes):
-                res.append(messagee(text: textMes.text.text))
+                
+                res.append(messagee(text: textMes.text.text, userId: senderId))
             default:
-                res.append(messagee(text: "Content"))
+                res.append(messagee(text: "Content", userId: senderId))
             }
         }
         self.messages =  res
+        
         messagesCollectionView.reloadData()
+        messagesCollectionView.scrollToLastItem()
     }
 }
 

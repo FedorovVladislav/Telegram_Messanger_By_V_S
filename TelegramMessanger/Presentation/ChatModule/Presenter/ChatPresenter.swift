@@ -27,6 +27,7 @@ class ChatPresenter: ChatPresenterProtocol {
     var chatId: Int64
  
     required init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64,  lastMess: Int64) {
+        print ("***** init chat presenter")
         self.view = view
         self.router = router
         self.networkLayer = networkLayer
