@@ -1,11 +1,3 @@
-//
-//  ChatViewController.swift
-//  tdlib-ios
-//
-//  Created by Елизавета Федорова on 11.02.2022.
-//  Copyright © 2022 Anton Glezman. All rights reserved.
-//
-
 import UIKit
 import TdlibKit
 
@@ -31,7 +23,7 @@ class ChatListViewController: UIViewController {
     var presenter: ChatListPresenter!
 
     var chatData: [UpdateNewChat]?
-    var chatDic: [Int64:ChatModel]?
+    var chatDic: [Int64 : ChatModel]?
     var chatPos: [ChatPositionlist]?
     
     override func viewDidLoad() {
@@ -41,6 +33,9 @@ class ChatListViewController: UIViewController {
         navigationItem.rightBarButtonItem = reloadButton
         
         view.addSubview(chatTable)
+        
+        presenter.networkLayer.getContact()
+        
         chatTable.dataSource = self
         chatTable.delegate = self
         
@@ -53,7 +48,9 @@ class ChatListViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        presenter.networkLayer.getContact()
+     
+        /// guard let nv = presenter.router.current.children.first  else { return }
+      //  print ("*****  children vc: \(nv.children)")
     }
     
     func getChatList() {
@@ -154,10 +151,10 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
         print ("****** chat ID \(chatPos[indexPath.row].chatId)")
         if  indexPath.row + 1 < chatPos.count {
             let charmodel = chatDic?[chatPos[indexPath.row].chatId]
-            guard let lastMess = charmodel?.lastMessId else { return }
+            guard let lastMess = charmodel?.lastMessage else { return }
             
            // presenter.openChat(chatID: chatPos[indexPath.row].chatId, source: self, lastMess: lastMess)
-            presenter.openChat(chatID: chatPos[indexPath.row].chatId, lastMess: 0)
+            presenter.openChat(chatID: chatPos[indexPath.row].chatId, lastMess: lastMess)
         }
     }
 }

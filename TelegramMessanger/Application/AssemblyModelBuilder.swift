@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import TdlibKit
 
 protocol AssemblyBuilderProtocol {
     func createLoadingModule(router: RouterProtocol) -> UIViewController
     func createAuthNumberModule(router: RouterProtocol) -> UIViewController
     func createAuthCodeModule(router: RouterProtocol) -> UIViewController
     func createChatListModule(router: RouterProtocol) -> UIViewController
-    func createChatModule(router: RouterProtocol, chatID: Int64, lastMess: Int64) -> UIViewController
+    func createChatModule(router: RouterProtocol, chatID: Int64, lastMess: Message) -> UIViewController
     func createSettingsModule(router: RouterProtocol) -> UIViewController
 }
 
@@ -28,7 +29,7 @@ class AssemblyModelBuilder: AssemblyBuilderProtocol {
         return  view
     }
     
-    func createChatModule(router: RouterProtocol, chatID: Int64, lastMess: Int64) -> UIViewController {
+    func createChatModule(router: RouterProtocol, chatID: Int64, lastMess: Message) -> UIViewController {
         let view = ChatViewController()
         let presenter = ChatPresenter(view: view, router: router, networkLayer: serviceManager.chatService, chatId: chatID, lastMess: lastMess)
         view.presenter = presenter

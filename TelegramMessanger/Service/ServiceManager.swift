@@ -24,7 +24,7 @@ class ServiceManager {
         chatListService = ChatListService(tdApi: telegramService.api)
         telegramService.add(listener: chatListService)
         
-        chatService = ChatService(tdApi: telegramService.api)
+        chatService = ChatService(tdApi: telegramService.api, telegramService: telegramService)
         telegramService.add(listener: chatService)
     }
 }

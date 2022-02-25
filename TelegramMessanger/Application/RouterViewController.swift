@@ -1,4 +1,5 @@
 import UIKit
+import TdlibKit
 
 protocol Router {
     var appBuilder: AssemblyModelBuilder{  get set }
@@ -11,7 +12,7 @@ protocol RouterProtocol: Router {
     //func contactVC()
     func chatListVC()
     func popBack()
-    func chatVC(chatId: Int64, lastMess: Int64)
+    func chatVC(chatId: Int64, lastMess: Message)
     //func settingVC()
     func start()
 }
@@ -39,7 +40,7 @@ class RouterViewController: UIViewController, RouterProtocol {
         current.show(vc, sender: nil)
     }
     
-    func chatVC(chatId: Int64, lastMess: Int64) {
+    func chatVC(chatId: Int64, lastMess: Message) {
         let vc = appBuilder.createChatModule(router: self, chatID: chatId, lastMess: lastMess)
         
         guard let nv = self.current.children.first else { return }

@@ -19,6 +19,7 @@ final class TelegramService {
     // MARK: - Public properties
        
     let api: TdApi
+    var userId: Int64 = 0
     
     // MARK: - Private properties
     
@@ -45,6 +46,23 @@ final class TelegramService {
                 let update = try self.api.decoder.decode(Update.self, from: data)
                 try! updatelisterners(update: update)
                 print("\n ************* new Mess *******************\n ")
+                switch  update {
+                    
+                case .updateOption(let updateOption):
+                    if updateOption.name == "my_id" {
+                    
+                    switch updateOption.value {
+                    case.optionValueInteger(let op):
+                        self.userId = op.value.rawValue
+                
+                    default:
+                        break
+                    }
+                }
+                default:
+                    break
+                }
+                    
             } catch {
                 print("\n ************* error decode *******************\n ")
             }

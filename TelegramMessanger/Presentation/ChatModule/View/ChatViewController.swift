@@ -8,82 +8,79 @@
 
 import UIKit
 import MessageKit
-import TdlibKit
 import InputBarAccessoryView
 
-struct messagee: MessageType {
-    var sender: SenderType
-    var messageId: String
-    var sentDate: MessageKit.Date
-    var kind: MessageKind
-    
-    init(text: String, userId: Int64){
-        sender = sendertype(senderId: userId)
-        messageId = "messageID"
-        sentDate = MessageKit.Date(timeIntervalSinceNow: 1)
-        kind = .text(text)
-    }
-}
-
-struct sendertype: SenderType {
-    var senderId: String
-    var displayName: String
-
-    
-    init (senderId: Int64){
-        self.senderId = "\(senderId)"
-        displayName = "hol"
-    }
-}
-
 class ChatViewController: MessagesViewController {
-    
-    
-    
+    private(set) lazy var refreshControl: UIRefreshControl = {
+        let control = UIRefreshControl()
+        control.tintColor = .white
+        control.addTarget(self, action: #selector(loadMoreMessages), for: .valueChanged)
+        
+        return control
+    }()
     var presenter: ChatPresenterProtocol!
-    var senderId: String = "\(883411616)"
-    private var messages: [messagee] = []
+    var senderId: Int64?
+    private var messages: [MessageModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        removeMessageAvatars()
-        messageInputBar.delegate = self
+        
+        self.senderId = presenter.networkLayer.getSenderID()
+        title = "Chat"
+        
+        setupMessagesCollectionView()
+        setupMessageInputBar()
+    }
+    
+    private func removeMessageAvatars() {
+        guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else { return }
+        
+        layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
+        layout.textMessageSizeCalculator.incomingAvatarSize = .zero
+        layout.setMessageIncomingAvatarSize(.zero)
+        layout.setMessageOutgoingAvatarSize(.zero)
+        
+        let incomingLabelAlignment = LabelAlignment (textAlignment: .left,
+                                                     textInsets: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0))
+        layout.setMessageIncomingMessageTopLabelAlignment(incomingLabelAlignment)
+      
+        let outgoingLabelAlignment = LabelAlignment (textAlignment: .right,
+                                                     textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15))
+        layout.setMessageOutgoingMessageTopLabelAlignment(outgoingLabelAlignment)
+    }
+    
+    private func setupMessagesCollectionView() {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        
         messagesCollectionView.backgroundColor = .black
+        messagesCollectionView.refreshControl = refreshControl
+        
+        removeMessageAvatars()
+    }
+
+    private func setupMessageInputBar() {
+        messageInputBar.delegate = self
+        
+        messageInputBar.inputTextView.tintColor = .white
+        messageInputBar.inputTextView.textColor = .white
+        messageInputBar.backgroundView.backgroundColor = .black
+    }
     
-        title = "Chat"
-    }
-    private func removeMessageAvatars() {
-      guard
-        let layout = messagesCollectionView.collectionViewLayout
-          as? MessagesCollectionViewFlowLayout
-      else {
-        return
-      }
-      layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
-      layout.textMessageSizeCalculator.incomingAvatarSize = .zero
-      layout.setMessageIncomingAvatarSize(.zero)
-      layout.setMessageOutgoingAvatarSize(.zero)
-      let incomingLabelAlignment = LabelAlignment(
-        textAlignment: .left,
-        textInsets: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0))
-      layout.setMessageIncomingMessageTopLabelAlignment(incomingLabelAlignment)
-      let outgoingLabelAlignment = LabelAlignment(
-        textAlignment: .right,
-        textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15))
-      layout.setMessageOutgoingMessageTopLabelAlignment(outgoingLabelAlignment)
-    }
+    @objc private func loadMoreMessages(){
+         print ("***** LoadMore Message *******")
+     }
 }
 
 extension ChatViewController: MessagesDataSource {
     
     func currentSender() -> SenderType {
-        return sendertype(senderId: 883411616)
+        return SenderTypeModel(senderId: senderId ?? 0)
     }
     func isFromCurrentSender(message: MessageType) -> Bool {
-        return message.sender.senderId == self.senderId ? true : false
+        guard let senderId = senderId else { return false }
+        return message.sender.senderId == "\(senderId)" ? true : false
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -113,7 +110,8 @@ extension ChatViewController: MessagesDisplayDelegate {
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
         let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
         return .bubbleTail(corner, .curved)
-      }
+    }
+    
     func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         return .white
     }
@@ -123,7 +121,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         print( "***** didPressSendButtonWith ****")
         inputBar.inputTextView.text = ""
-        presenter.networkLayer.sendMess(text: text)
+        presenter.sendMessage(text: text)
     }
     
     func inputBar(_ inputBar: InputBarAccessoryView, didChangeIntrinsicContentTo size: CGSize) {
@@ -140,94 +138,9 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
 }
 
 extension ChatViewController: ChatViewProtocol {
-    func showMessahe(data: [Message]) {
-        var res: [messagee] = []
-        for mes in data{
-            var  senderId: Int64 = 0
-            switch mes.senderId {
-                
-            case .messageSenderUser(let sender):
-                senderId = sender.userId
-            case .messageSenderChat(_):
-                break
-            }
-            
-            switch mes.content {
-            case .messageText(let  textMes):
-                
-                res.append(messagee(text: textMes.text.text, userId: senderId))
-            default:
-                res.append(messagee(text: "Content", userId: senderId))
-            }
-        }
-        self.messages =  res
-        
+    func showMessahe(data: [MessageModel]) {
+        self.messages = data
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem()
     }
 }
-
-
-
-//
-//    var mess : [Message]?
-//
-//    var presenter: ChatPresenterProtocol!
-//
-//    let chatTable: UITableView = {
-//        let tableView = UITableView()
-//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        tableView.backgroundColor = .black
-//        tableView.rowHeight =  60
-//
-//        return tableView
-//    }()
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        view.backgroundColor =  .white
-//
-//        view.addSubview(chatTable)
-//        chatTable.dataSource = self
-//
-//        NSLayoutConstraint.activate([
-//            chatTable.topAnchor.constraint(equalTo: view.topAnchor),
-//            chatTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            chatTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            chatTable.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//        ])
-//    }
-//}
-//
-//extension ChatViewController: UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return mess?.count ?? 10
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell" )
-//        guard let message =  mess?[indexPath.row] else {
-//            cell.textLabel?.text = "Lol"
-//            return cell
-//        }
-//        switch message.content {
-//            case .messageText(let messageText):
-//                cell.textLabel?.text = messageText.text.text
-//            default:
-//                cell.textLabel?.text = "Content "
-//        }
-//        return cell
-//    }
-//
-//
-//}
-//
-//extension ChatViewController: ChatViewProtocol {
-//    func showMessahe(data: [Message]) {
-//        self.mess = data
-//        chatTable.reloadData()
-//    }
-//
-//
-//}
