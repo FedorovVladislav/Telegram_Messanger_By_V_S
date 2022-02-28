@@ -40,12 +40,12 @@ class ChatViewController: MessagesViewController {
         layout.setMessageIncomingAvatarSize(.zero)
         layout.setMessageOutgoingAvatarSize(.zero)
         
-        let incomingLabelAlignment = LabelAlignment (textAlignment: .left,
-                                                     textInsets: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0))
+        let incomingLabelAlignment = LabelAlignment(textAlignment: .left,
+                                                    textInsets: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0))
         layout.setMessageIncomingMessageTopLabelAlignment(incomingLabelAlignment)
       
-        let outgoingLabelAlignment = LabelAlignment (textAlignment: .right,
-                                                     textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15))
+        let outgoingLabelAlignment = LabelAlignment(textAlignment: .right,
+                                                    textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15))
         layout.setMessageOutgoingMessageTopLabelAlignment(outgoingLabelAlignment)
     }
     

@@ -10,8 +10,9 @@ import UIKit
 import TdlibKit
 
 struct ChatModel {
-    var title: String
+    var chatId: Int64
+    var title: String?
     var lastMessage: Message?
-    var lastMessId: Int64?
+   // var lastMessId: Int64?
     var chatPosition: ChatPosition? 
 }
