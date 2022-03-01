@@ -32,8 +32,8 @@ class ChatService {
         try! api.sendMessage(chatId: chatId, inputMessageContent: inputMessageContent, messageThreadId: nil, options: nil, replyMarkup: nil, replyToMessageId: nil, completion: {  res in })
     }
     
-    func getChatMess(chatId: Int64, lastMess: Int64) {
-        try! api.getChatHistory(chatId: chatId, fromMessageId: lastMess, limit: 20, offset: nil, onlyLocal: false, completion: { [weak self] result  in
+    func getChatMess(chatId: Int64, lastMess: Int64?) {
+        try! api.getChatHistory(chatId: chatId, fromMessageId: lastMess ?? nil, limit: 20, offset: nil, onlyLocal: false, completion: { [weak self] result  in
             switch result{
                 
             case .success(_):

@@ -11,54 +11,30 @@ class ChatListViewController: UIViewController {
         
         return tableView
     }()
-    let reloadButton: UIBarButtonItem = {
-        let image = UIImage(systemName: "repeat")
-        
-        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(getDat))
-        
-        return barButtonItem
-    }()
-   
     var presenter: ChatListPresenter!
-
-   // var chatData: [UpdateNewChat]?
     var chatDic: [ChatModel]?
-   // var chatPos: [ChatPositionlist]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Chat List"
-        
-        navigationItem.rightBarButtonItem = reloadButton
-        
+        title = "Chats"
+            
         view.addSubview(chatTable)
+        setConstraints()
         
-        presenter.networkLayer.getContact()
-        
+        presenter.getContact()
+   
         chatTable.dataSource = self
         chatTable.delegate = self
-        
+
+    }
+    
+    private func setConstraints(){
         NSLayoutConstraint.activate([
             chatTable.topAnchor.constraint(equalTo: view.topAnchor),
             chatTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             chatTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             chatTable.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-     
-        /// guard let nv = presenter.router.current.children.first  else { return }
-      //  print ("*****  children vc: \(nv.children)")
-    }
-    
-    func getChatList() {
-        
-    }
-    
-    @objc func getDat() {
-        print("BBarButtonWork")
-        presenter.getContact()
     }
 }
 
@@ -141,14 +117,8 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print ("****** chat ID \(chatDic?[indexPath.row].chatId)")
-        
         guard let chatDic = chatDic else { return }
-        guard let lastMess = chatDic[indexPath.row].lastMessage else { return }
         
-        presenter.openChat(chatID: chatDic[indexPath.row].chatId, lastMess: lastMess)
+        presenter.openChat(chat: chatDic[indexPath.row])
     }
 }
-
-
-
-

@@ -12,7 +12,7 @@ protocol RouterProtocol: Router {
     //func contactVC()
     func chatListVC()
     func popBack()
-    func chatVC(chatId: Int64, lastMess: Message)
+    func chatVC(chat: ChatModel)
     //func settingVC()
     func start()
 }
@@ -40,8 +40,8 @@ class RouterViewController: UIViewController, RouterProtocol {
         current.show(vc, sender: nil)
     }
     
-    func chatVC(chatId: Int64, lastMess: Message) {
-        let vc = appBuilder.createChatModule(router: self, chatID: chatId, lastMess: lastMess)
+    func chatVC(chat: ChatModel) {
+        let vc = appBuilder.createChatModule(router: self, chatID: chat.chatId, lastMess: chat.lastMessage)
         
         guard let nv = self.current.children.first else { return }
         nv.show(vc, sender: nil)

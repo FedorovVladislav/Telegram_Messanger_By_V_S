@@ -7,7 +7,7 @@ protocol ChatViewProtocol: AnyObject {
 }
 
 protocol ChatPresenterProtocol: AnyObject {
-    init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64, lastMess: Message)
+    init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64, lastMess: Message?)
     func sendMessage(text: String)
     var router: RouterProtocol  { get }
     var networkLayer: ChatService { get }
@@ -20,15 +20,20 @@ class ChatPresenter: ChatPresenterProtocol {
     var chatId: Int64
     var messageList = [Int64: Message]()
  
-    required init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64, lastMess: Message) {
+    required init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chatId: Int64, lastMess: Message?) {
         self.view = view
         self.router = router
         self.networkLayer = networkLayer
         self.chatId = chatId
-        self.messageList[lastMess.id] = lastMess
+        if let lastMess = lastMess {
+            self.messageList[lastMess.id] = lastMess
+            
+        }
+            
         
         networkLayer.delegate = self
-        networkLayer.getChatMess(chatId: chatId, lastMess: lastMess.id)
+        
+        networkLayer.getChatMess(chatId: chatId, lastMess: lastMess?.id)
     }
     
     deinit {
