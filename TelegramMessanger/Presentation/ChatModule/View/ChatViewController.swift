@@ -20,14 +20,18 @@ class ChatViewController: MessagesViewController {
     }()
     var presenter: ChatPresenterProtocol!
     var senderId: Int64?
+    var chatTitle: String = "" {
+        didSet {
+            title = chatTitle
+        }
+    }
+  
     private var messages: [MessageModel] = []
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.senderId = presenter.networkLayer.getSenderID()
-        title = "Chat"
-        
+
         setupMessagesCollectionView()
         setupMessageInputBar()
     }
@@ -138,6 +142,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
 }
 
 extension ChatViewController: ChatViewProtocol {
+   
     func showMessahe(data: [MessageModel]) {
         self.messages = data
         messagesCollectionView.reloadData()

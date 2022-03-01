@@ -67,7 +67,7 @@ class ChatListPresenter: ChatListPresenterProtocol {
                                 title: String?,
                                 lastMessage: Message?,
                                 chatPosition: ChatPosition?) {
-       // print("\n ***** updateChatDict \(self.serialQueue) ) *******")
+        
         if chatDic[chatId] == nil {
             chatDic[chatId] = ChatModel(chatId: chatId, title: title, lastMessage: lastMessage, chatPosition: chatPosition)
         } else {

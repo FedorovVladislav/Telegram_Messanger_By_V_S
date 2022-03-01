@@ -11,6 +11,12 @@ class ChatListViewController: UIViewController {
         
         return tableView
     }()
+    let activityIndicator: UIActivityIndicatorView = {
+        let activitiIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+        activitiIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return  activitiIndicator
+    }()
+    
     var presenter: ChatListPresenter!
     var chatDic: [ChatModel]?
     
@@ -19,13 +25,13 @@ class ChatListViewController: UIViewController {
         title = "Chats"
             
         view.addSubview(chatTable)
+        view.addSubview(activityIndicator)
         setConstraints()
-        
+        activityIndicator.startAnimating()
         presenter.getContact()
    
         chatTable.dataSource = self
         chatTable.delegate = self
-
     }
     
     private func setConstraints(){
@@ -33,7 +39,12 @@ class ChatListViewController: UIViewController {
             chatTable.topAnchor.constraint(equalTo: view.topAnchor),
             chatTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             chatTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            chatTable.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            chatTable.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            activityIndicator.heightAnchor.constraint(equalToConstant: 40),
+            activityIndicator.widthAnchor.constraint(equalToConstant: 40),
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
 }
@@ -43,6 +54,7 @@ extension ChatListViewController: ChatListViewProtocol {
         self.chatDic = chatList
         DispatchQueue.main.async {
             self.chatTable.reloadData()
+            self.activityIndicator.isHidden = true
         }
     }
 }
@@ -50,7 +62,7 @@ extension ChatListViewController: ChatListViewProtocol {
 extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
    
-        return chatDic?.count ?? 10
+        return chatDic?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

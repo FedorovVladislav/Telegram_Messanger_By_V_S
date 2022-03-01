@@ -41,7 +41,7 @@ class RouterViewController: UIViewController, RouterProtocol {
     }
     
     func chatVC(chat: ChatModel) {
-        let vc = appBuilder.createChatModule(router: self, chatID: chat.chatId, lastMess: chat.lastMessage)
+        let vc = appBuilder.createChatModule(router: self, chat: chat)
         
         guard let nv = self.current.children.first else { return }
         nv.show(vc, sender: nil)
