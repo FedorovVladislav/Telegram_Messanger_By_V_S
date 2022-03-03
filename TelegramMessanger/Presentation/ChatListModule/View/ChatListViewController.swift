@@ -7,7 +7,9 @@ class ChatListViewController: UIViewController {
         tableView.register(ChatTableViewCell.self, forCellReuseIdentifier: ChatTableViewCell.identifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .black
-        tableView.rowHeight =  60
+        tableView.rowHeight =  70
+        tableView.separatorColor = .gray
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 75, bottom: 0, right: 0)
         
         return tableView
     }()
@@ -28,10 +30,12 @@ class ChatListViewController: UIViewController {
         view.addSubview(activityIndicator)
         setConstraints()
         activityIndicator.startAnimating()
-        presenter.getContact()
-   
+
         chatTable.dataSource = self
         chatTable.delegate = self
+        
+        presenter.getContact()
+
     }
     
     private func setConstraints(){
@@ -79,51 +83,59 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
         switch chatDic[indexPath.row].lastMessage?.content {
             
         case.messageText(let messageText):
-            cell.LastMessage.text = messageText.text.text
+            cell.lastMessage.text = messageText.text.text
         
         case .some(.messageAudio(_)):
-            cell.LastMessage.text = "Audio"
+            cell.lastMessage.text = "Audio"
             
         case .some(.messageDocument(_)):
-            cell.LastMessage.text = "messageDocument"
+            cell.lastMessage.text = "messageDocument"
             
         case .some(.messagePhoto(_)):
-            cell.LastMessage.text = "messagePhoto"
+            cell.lastMessage.text = "messagePhoto"
             
         case .some(.messageSticker(_)):
-            cell.LastMessage.text = "messageSticker"
+            cell.lastMessage.text = "messageSticker"
             
         case .some(.messageVideo(_)):
-            cell.LastMessage.text = "messageVideo"
+            cell.lastMessage.text = "messageVideo"
             
         case .some(.messageExpiredVideo):
-            cell.LastMessage.text = "messageExpiredVideo"
+            cell.lastMessage.text = "messageExpiredVideo"
             
         case .some(.messageVoiceNote(_)):
-            cell.LastMessage.text = "messageVoiceNote"
+            cell.lastMessage.text = "messageVoiceNote"
             
         case .some(.messageLocation(_)):
-            cell.LastMessage.text = "messageLocation"
+            cell.lastMessage.text = "messageLocation"
             
         case .some(.messageContact(_)):
-            cell.LastMessage.text = "messageContact"
+            cell.lastMessage.text = "messageContact"
             
         case .some(.messageAnimatedEmoji(_)):
-            cell.LastMessage.text = "messageAnimatedEmoji"
+            cell.lastMessage.text = "messageAnimatedEmoji"
     
         case .some(.messagePoll(_)):
-            cell.LastMessage.text = "messagePoll"
+            cell.lastMessage.text = "messagePoll"
             
         case .some(.messageInvoice(_)):
-            cell.LastMessage.text = "messageInvoice"
+            cell.lastMessage.text = "messageInvoice"
             
         case .some(.messageCall(_)):
-            cell.LastMessage.text = "messageCall"
+            cell.lastMessage.text = "messageCall"
             
         default:
-            cell.LastMessage.text = "other"
+            cell.lastMessage.text = "other"
         }
-    
+        print ("****** photoInfoPath: \(chatDic[indexPath.row].photoInfoPath)")
+        if let path  = chatDic[indexPath.row].photoInfoPath {
+            print ("****** GetIPath: *****)")
+            if let photo = UIImage(contentsOfFile: path) {
+                print ("****** GetImagefromPath ****)")
+                cell.contactImage.image = photo
+            }
+           
+        }
         return cell
     }
     

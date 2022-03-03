@@ -1,6 +1,7 @@
 import Foundation
 import TdlibKit
 import CoreImage
+import UIKit
 
 protocol messDataDelegate {
     func updateData (update: Update)
@@ -48,6 +49,9 @@ class ChatService {
             }
         })
     }
+    
+    
+    
 }
 
 extension ChatService: UpdateListeners {

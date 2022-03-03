@@ -13,6 +13,7 @@ struct ChatModel {
     var chatId: Int64
     var title: String?
     var lastMessage: Message?
+    var photoInfoPath: String?
    // var lastMessId: Int64?
     var chatPosition: ChatPosition? 
 }

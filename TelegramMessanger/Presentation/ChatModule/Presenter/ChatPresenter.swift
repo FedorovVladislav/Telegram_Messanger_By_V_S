@@ -116,7 +116,8 @@ extension ChatPresenter: messDataDelegate {
             print("******** updateMessageLiveLocationViewed *******")
             
         case .updateUser(let updateUser):
-            print("******** updateUser *******")
+            print("******** updateUser \(updateUser)*******")
+            
 
         default:
             break

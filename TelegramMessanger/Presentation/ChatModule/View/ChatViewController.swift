@@ -31,7 +31,7 @@ class ChatViewController: MessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.senderId = presenter.networkLayer.getSenderID()
-
+       // self.presenter.networkLayer.getImage()
         setupMessagesCollectionView()
         setupMessageInputBar()
     }

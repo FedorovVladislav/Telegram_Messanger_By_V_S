@@ -24,13 +24,14 @@ final class TelegramService {
     // MARK: - Private properties
     
     private var listeners: [UpdateListenerWeakBox] = []
-       
+  
     // MARK: - Init
     
     init(){
         let client = TdClientImpl(completionQueue: .main, logger: StdOutLogger())
         self.api = TdApi(client: client)
         run()
+      
     }
     deinit{
         print("**** Deinit *****")
@@ -45,7 +46,7 @@ final class TelegramService {
                 
                 let update = try self.api.decoder.decode(Update.self, from: data)
                 try! updatelisterners(update: update)
-               // print("\n ************* new Mess *******************\n ")
+                print("\n ************* new Mess : \(update) ******************* \n ")
                 switch  update {
                     
                 case .updateOption(let updateOption):
@@ -54,11 +55,36 @@ final class TelegramService {
                     switch updateOption.value {
                     case.optionValueInteger(let op):
                         self.userId = op.value.rawValue
+                    
                 
                     default:
                         break
                     }
+                        
                 }
+//                case  .updateAuthorizationState( let updateAuthorizationState):
+//                    switch updateAuthorizationState.authorizationState {
+////                    case .authorizationStateReady:
+////                        serialQueue.async {
+////                            try! self.api.getContacts(completion: { res in
+////                                print("****** getContacts:  \(res) ")
+////                                 switch res {
+////
+////                                 case .success(let users):
+////                                     for user in users.userIds {
+////                                         self.getImage(userID: user)
+////                                     }
+////
+////                                 case .failure(_):
+////                                     break
+////                                 }
+////                            })
+////                        }
+//
+//                    default:
+//                        break
+//                    }
+                //case .updateFile(<#T##UpdateFile#>)
                 default:
                     break
                 }
@@ -88,6 +114,33 @@ final class TelegramService {
         }
         listeners.compact()
     }
+    
+//    func getImage(userID: Int64) {
+//
+//        try! api.getUserProfilePhotos(limit: 1, offset: nil, userId: userID, completion: {
+//            res in
+//            print("****** getImage:  \(res) ")
+//
+//            switch res{
+//
+//            case .success(let data):
+//                if  let photo = data.photos.first?.sizes.first?.photo {
+//                    if photo.local.isDownloadingCompleted {
+//                        self.photoPath[userID] = photo.local.path
+//                        print("****** photoPath  \( self.photoPath.count) ")
+//                }
+//                    self.downloadImage(userID: userID, remoteId: photo.remote.id)
+//                } else {
+//                    print("****** cant get photo:  \(res) ")
+//                }
+//            case .failure(_):
+//                break
+//            }
+//        })
+//    }
+    
+   
+       
     
     // MARK: - Private Method
     

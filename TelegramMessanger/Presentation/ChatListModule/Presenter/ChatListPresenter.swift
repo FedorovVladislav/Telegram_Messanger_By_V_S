@@ -66,10 +66,11 @@ class ChatListPresenter: ChatListPresenterProtocol {
     private func updateChatDict(chatId: Int64,
                                 title: String?,
                                 lastMessage: Message?,
-                                chatPosition: ChatPosition?) {
+                                chatPosition: ChatPosition?,
+                                photoPath: String?) {
         
         if chatDic[chatId] == nil {
-            chatDic[chatId] = ChatModel(chatId: chatId, title: title, lastMessage: lastMessage, chatPosition: chatPosition)
+            chatDic[chatId] = ChatModel(chatId: chatId, title: title, lastMessage: lastMessage, photoInfoPath: photoPath, chatPosition: chatPosition)
         } else {
             if let title = title {
                 chatDic[chatId]!.title = title
@@ -79,6 +80,9 @@ class ChatListPresenter: ChatListPresenterProtocol {
             }
             if let chatPosition = chatPosition {
                 chatDic[chatId]!.chatPosition = chatPosition
+            }
+            if let photoPath = photoPath {
+                chatDic[chatId]!.photoInfoPath = photoPath
             }
         }
         self.dispatchGroup.leave()
@@ -97,14 +101,28 @@ extension ChatListPresenter: ChatListDelegate {
 
         /// A new chat has been loaded/created. This update is guaranteed to come before the chat identifier is returned to the application. The chat field changes will be reported through separate updates
         case .updateNewChat(let newChat):
+            var photoPathTemp: String?
+            if let photo = newChat.chat.photo?.small{
+                
+                if  photo.local.isDownloadingCompleted {
+                    print("******** photo.local.isDownloadingCompleted \(photo.local.path)")
+                    photoPathTemp = photo.local.path
+                } else {
+                    networkLayer.downloadImage(userID: newChat.chat.id, remoteId: photo.remote.id)
+                }
+            }
             count = count + 1
-            print("\n ***** addNewItem *******")
+            self.dispatchGroup.enter()
+            print("\n ***** addNewItem \(newChat)*******")
             serialQueue.async(group: dispatchGroup) {
-                self.dispatchGroup.enter()
+            
                 self.updateChatDict(chatId: newChat.chat.id,
                                title: newChat.chat.title,
                                lastMessage: newChat.chat.lastMessage,
-                               chatPosition: newChat.chat.positions.first)
+                               chatPosition: newChat.chat.positions.first,
+                                photoPath: photoPathTemp
+                )
+              
             }
             
         /// The title of a chat was changed
@@ -122,12 +140,13 @@ extension ChatListPresenter: ChatListDelegate {
         case .updateChatLastMessage(let updateChatLastMessage):
             count = count + 1
             print("\n***** updateChatLastMessage  *******")
+            self.dispatchGroup.enter()
             serialQueue.async(group: dispatchGroup) {
-                self.dispatchGroup.enter()
+                
                 self.updateChatDict(chatId: updateChatLastMessage.chatId,
                            title: nil,
                            lastMessage: updateChatLastMessage.lastMessage,
-                           chatPosition: updateChatLastMessage.positions.first
+                                    chatPosition: updateChatLastMessage.positions.first, photoPath: nil
                 )
             }
 
@@ -135,12 +154,15 @@ extension ChatListPresenter: ChatListDelegate {
         case .updateChatPosition(let updateChatPosition):
             count = count + 1
             print("\n ***** updateChatPosition *******")
+            self.dispatchGroup.enter()
+            
             serialQueue.async(group: dispatchGroup) {
-                self.dispatchGroup.enter()
+               
                 self.updateChatDict(chatId: updateChatPosition.chatId,
                            title: nil,
                            lastMessage:  nil,
-                           chatPosition: updateChatPosition.position)
+                                    chatPosition: updateChatPosition.position,
+                                    photoPath:nil)
             }
             
         /// The default message sender that is chosen to send messages in a chat has changed
