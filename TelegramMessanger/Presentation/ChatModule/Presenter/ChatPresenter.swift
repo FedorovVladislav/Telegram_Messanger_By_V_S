@@ -5,6 +5,7 @@ import CoreMIDI
 protocol ChatViewProtocol: AnyObject {
     func showMessahe(data: [MessageModel])
     var chatTitle: String { get set }
+    var chatImagePath: String {  get  set }
 }
 
 protocol ChatPresenterProtocol: AnyObject {
@@ -31,9 +32,12 @@ class ChatPresenter: ChatPresenterProtocol {
             
         }
         if let title = chat.title {
-            
-        self.view?.chatTitle =  title
+            self.view?.chatTitle =  title
         }
+        if let profileImagePath = chat.photoInfoPath {
+            self.view?.chatImagePath  =  profileImagePath
+        }
+        
         networkLayer.delegate = self
         networkLayer.getChatMess(chatId: chatId, lastMess: chat.lastMessage?.id)
     }

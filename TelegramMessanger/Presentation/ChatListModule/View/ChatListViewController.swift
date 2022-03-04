@@ -2,6 +2,8 @@ import UIKit
 import TdlibKit
 
 class ChatListViewController: UIViewController {
+    
+    //MARK: - UIElement
     let chatTable: UITableView = {
         let tableView = UITableView()
         tableView.register(ChatTableViewCell.self, forCellReuseIdentifier: ChatTableViewCell.identifier)
@@ -18,6 +20,27 @@ class ChatListViewController: UIViewController {
         activitiIndicator.translatesAutoresizingMaskIntoConstraints = false
         return  activitiIndicator
     }()
+    let addBarButton: UIBarButtonItem = {
+        var barButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"),
+                                            style: .plain,
+                                            target: self,
+                                            action: #selector(addBarBuruttonAction))
+        return barButtonItem
+    }()
+    let editBarButton: UIBarButtonItem = {
+        var barButtonItem = UIBarButtonItem(title: "Edit",
+                                            style: .plain,
+                                            target: self,
+                                            action: #selector(editBarBuruttonAction))
+        return barButtonItem
+    }()
+    let searchController: UISearchController = {
+        var searchController =  UISearchController()
+        
+        return searchController
+    }()
+    
+    //MARK: - Variables
     
     var presenter: ChatListPresenter!
     var chatDic: [ChatModel]?
@@ -25,7 +48,9 @@ class ChatListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Chats"
-            
+        navigationItem.rightBarButtonItem = addBarButton
+        navigationItem.leftBarButtonItem =  editBarButton
+        navigationItem.searchController = searchController
         view.addSubview(chatTable)
         view.addSubview(activityIndicator)
         setConstraints()
@@ -38,6 +63,7 @@ class ChatListViewController: UIViewController {
 
     }
     
+    //MARK: - SetUpFunc
     private func setConstraints(){
         NSLayoutConstraint.activate([
             chatTable.topAnchor.constraint(equalTo: view.topAnchor),
@@ -51,8 +77,17 @@ class ChatListViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
+    
+    //MARK: - ButtonAction
+    @objc private func addBarBuruttonAction(){
+        
+    }
+    @objc private func editBarBuruttonAction(){
+        
+    }
 }
 
+//MARK: - ChatListViewProtocol
 extension ChatListViewController: ChatListViewProtocol {
     func updateTableList(chatList: [ChatModel]) {
         self.chatDic = chatList
@@ -63,6 +98,7 @@ extension ChatListViewController: ChatListViewProtocol {
     }
 }
 
+//MARK: -  UITableViewDataSource, UITableViewDelegate
 extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
    
@@ -77,7 +113,7 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
             cell.name.text = "nil"
             return cell
         }
-        
+
         cell.name.text = chatDic[indexPath.row].title
         
         switch chatDic[indexPath.row].lastMessage?.content {

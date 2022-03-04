@@ -18,6 +18,14 @@ class ChatViewController: MessagesViewController {
         
         return control
     }()
+    private let profileImageBarItem: UIBarButtonItem = {
+        let barButtonImage = UIBarButtonItem(image: UIImage(systemName: "paperplane.circle.fill"),
+                                             style: .plain,
+                                             target: self,
+                                             action: #selector(openProfile))
+        
+        return barButtonImage
+    }()
     var presenter: ChatPresenterProtocol!
     var senderId: Int64?
     var chatTitle: String = "" {
@@ -25,15 +33,28 @@ class ChatViewController: MessagesViewController {
             title = chatTitle
         }
     }
-  
+    var chatImagePath: String = "" {
+        didSet {
+//            guard let image = UIImage(contentsOfFile: chatImagePath)  else {
+//                print ("***** cant get image *******")
+//                return
+//            }
+//            print ("***** get  image *******")
+            //profileImageBarItem.width = 38
+            
+            //profileImageBarItem.image = image
+            //profileImageBarItem.frame = CGRect(x: 0.0, y: 0.0, width: 38, height: 30)
+           setUpProfileButton(imagePath: chatImagePath)
+        }
+    }
     private var messages: [MessageModel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.senderId = presenter.networkLayer.getSenderID()
-       // self.presenter.networkLayer.getImage()
         setupMessagesCollectionView()
         setupMessageInputBar()
+       // navigationItem.rightBarButtonItem = profileImageBarItem
     }
     
     private func removeMessageAvatars() {
@@ -72,8 +93,33 @@ class ChatViewController: MessagesViewController {
         messageInputBar.backgroundView.backgroundColor = .black
     }
     
+    func setUpProfileButton(imagePath: String) {
+        guard let profileImage = UIImage(contentsOfFile: imagePath) else { return }
+        
+        let profileButton = UIButton(type: .custom)
+        profileButton.frame = CGRect(x: 0.0, y: 0.0, width: 38, height: 30)
+        profileButton.setImage(profileImage, for: .normal)
+        profileButton.addTarget(self, action: #selector(openProfile), for: UIControl.Event.touchUpInside)
+        profileButton.layer.cornerRadius = profileButton.frame.width/2
+        profileButton.clipsToBounds = true
+
+        let profileBarItem = UIBarButtonItem(customView: profileButton)
+        NSLayoutConstraint.activate([
+            profileBarItem.customView!.widthAnchor.constraint(equalToConstant: 40),
+            profileBarItem.customView!.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+//        let currWidth = profileBarItem.customView?.widthAnchor.constraint(equalToConstant: 40)
+//        currWidth?.isActive = true
+//        let currHeight = profileBarItem.customView?.heightAnchor.constraint(equalToConstant: 40)
+//        currHeight?.isActive = true
+        navigationItem.rightBarButtonItem = profileBarItem
+    }
+    @objc private func openProfile(){
+         print ("***** Open Profile *******")
+     }
     @objc private func loadMoreMessages(){
-         print ("***** LoadMore Message *******")
+         print ("***** loadMoreMessages *******")
      }
 }
 
@@ -142,6 +188,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
 }
 
 extension ChatViewController: ChatViewProtocol {
+   
    
     func showMessahe(data: [MessageModel]) {
         self.messages = data
