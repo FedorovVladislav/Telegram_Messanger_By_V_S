@@ -50,8 +50,38 @@ class ChatService {
         })
     }
     
+    func downloadImage(remoteId: String?) {
+
+        try!  api.getRemoteFile(fileType:  FileType.fileTypePhoto, remoteFileId: remoteId ?? "", completion: {
+            res in
+                      print("****** getRemoteFile:  \(res) ")
+            
+            switch res {
+                
+            case .success(let data):
+                try! self.api.downloadFile(fileId: data.id, limit:0, offset: 0, priority: 32, synchronous: false, completion: {res in
+                  
+                    switch res{
+                
+                    case .success( let data):
+                        print("****** downloadFile success:  \(data) ")
+                        if data.local.isDownloadingCompleted {
+                       //     self.photoPath[userID] = data.local.path
+                            print("****** photoPath   ")
+                        }
+                    case .failure(_):
+                        break
+                    }
+                })
+            case .failure(_):
+                break
+            }
+            
+        })
+        
+       
     
-    
+}
 }
 
 extension ChatService: UpdateListeners {

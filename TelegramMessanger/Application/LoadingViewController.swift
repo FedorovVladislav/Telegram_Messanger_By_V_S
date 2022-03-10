@@ -10,6 +10,7 @@ import UIKit
 
 class LoadingViewController: UIViewController {
     
+    //MARK: - UIElement
     let iconImageView: UIImageView = {
         let imageView = UIImageView()
         let iconImage = UIImage(named: "Telegram_Messenger")
@@ -26,18 +27,25 @@ class LoadingViewController: UIViewController {
         return activitiIndicator
     }()
     
+    //MARK: - Data
     var networkManager: AuthService? = nil
     var router: RouterProtocol? = nil
-
+    
+    //MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
 
         networkManager?.authDelegate  = self
         self.view.backgroundColor = .black
         
-        
         view.addSubview(iconImageView)
         view.addSubview(activityIndicator)
+        
+        activityIndicator.startAnimating()
+    }
+    
+    //MARK: - Setup Interface
+    private func setConstraints() {
         
         NSLayoutConstraint.activate([
             iconImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -50,15 +58,13 @@ class LoadingViewController: UIViewController {
             activityIndicator.widthAnchor.constraint(equalToConstant: 40),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: 150)
         ])
-        
-        activityIndicator.startAnimating()
     }
-
 }
 
-extension  LoadingViewController: authStateDelegate {
+//MARK: - authStateDelegate
+extension  LoadingViewController: AuthStateDelegate {
     
-    func authStare(state: Bool) {
+    func authState(state: Bool) {
         if state {
             router?.chatListVC()
         } else {

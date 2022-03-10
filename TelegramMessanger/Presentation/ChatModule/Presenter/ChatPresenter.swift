@@ -13,9 +13,16 @@ protocol ChatPresenterProtocol: AnyObject {
     func sendMessage(text: String)
     var router: RouterProtocol  { get }
     var networkLayer: ChatService { get }
+    func loadMoreMessage()
 }
 
 class ChatPresenter: ChatPresenterProtocol {
+    func presentedMessage(id: Int64) {
+        if case .messagePhoto(let content) = messageList[id]?.content {
+            print("**** PhotoContent \(content)")
+        }
+    }
+    
     weak var view: ChatViewProtocol?
     let router: RouterProtocol
     let networkLayer: ChatService
@@ -29,11 +36,12 @@ class ChatPresenter: ChatPresenterProtocol {
         self.chatId = chat.chatId
         if let lastMess = chat.lastMessage {
             self.messageList[lastMess.id] = lastMess
-            
         }
+        
         if let title = chat.title {
             self.view?.chatTitle =  title
         }
+        
         if let profileImagePath = chat.photoInfoPath {
             self.view?.chatImagePath  =  profileImagePath
         }
@@ -58,7 +66,19 @@ class ChatPresenter: ChatPresenterProtocol {
             if case .messageText(let content) = message.content {
                 text = content.text.text
             }
-            
+            if case .messagePhoto(let content) = message.content {
+                if let photo = content.photo.sizes.first {
+                    if photo.photo.local.isDownloadingCompleted {
+                        text = "Downloaded"
+                    } else {
+                        text = "start loading"
+                        networkLayer.downloadImage(remoteId: photo.photo.remote.id)
+                    }
+                } else {
+                    text = "No Photo"
+                }
+               
+            }
             var  senderId: Int64 = 0
             if case .messageSenderUser(let sender) = message.senderId {
                 senderId = sender.userId
@@ -70,6 +90,15 @@ class ChatPresenter: ChatPresenterProtocol {
         return result
     }
     
+    func loadMoreMessage() {
+        var lastId: Int64 = messageList.first?.key ?? 0
+        for message in messageList {
+            if message.key < lastId {
+                lastId = message.key
+            }
+        }
+        networkLayer.getChatMess(chatId: chatId, lastMess: lastId)
+    }
 }
 
 extension ChatPresenter: messDataDelegate {
@@ -84,7 +113,7 @@ extension ChatPresenter: messDataDelegate {
         
         /// A new message was received; can also be an outgoing message
         case .updateNewMessage(let updateNewMessage):
-            print("******** updateNewMessage *******")
+            print("******** updateNewMessage \(updateNewMessage)*******")
             
             updateNewMessageDelegate(chatId: updateNewMessage.message.chatId, message: [updateNewMessage.message])
             
@@ -131,6 +160,8 @@ extension ChatPresenter: messDataDelegate {
     func updateNewMessageDelegate(chatId: Int64, message messages: [Message]) {
         if chatId == self.chatId {
             for message in messages {
+              //  print("******** message \(message) *******")
+                
                 messageList[message.id] = message
             }
             view?.showMessahe(data: prepairDataForModel(messageList: messageList))

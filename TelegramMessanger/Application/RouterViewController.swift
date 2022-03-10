@@ -43,28 +43,37 @@ class RouterViewController: UIViewController, RouterProtocol {
     func chatVC(chat: ChatModel) {
         let vc = appBuilder.createChatModule(router: self, chat: chat)
         
-        guard let nv = self.current.children.first else { return }
-        nv.show(vc, sender: nil)
-
+        for nv in self.current.children {
+            if nv.nibName == "Chats" {
+                nv.show(vc, sender: nil)
+            }
+        }
     }
     
     func authNumberVC() {
         let vc = appBuilder.createAuthNumberModule(router: self)
-        let navVC = createNavigaionVC(vc: vc, tabBarImage: nil, tabBarTitle: nil)
+        let navVC = createNavigaionVC(vc: vc, nibName: nil, tabBarImage: nil, tabBarTitle: nil)
         changeCurrentVC(vc: navVC)
     }
     
     func chatListVC() {
+        let contactVC       = createNavigaionVC(vc: UIViewController(),
+                                                nibName: "Contacts",
+                                                tabBarImage: UIImage(systemName: "person.crop.circle.fill"),
+                                                tabBarTitle: "Contacts")
+        
         let chatNavVC       = createNavigaionVC(vc: appBuilder.createChatListModule(router: self),
+                                                nibName: "Chats",
                                                 tabBarImage: UIImage(systemName: "message"),
                                                 tabBarTitle: "Chats")
     
         let settingsNavVC   = createNavigaionVC(vc: appBuilder.createSettingsModule(router: self),
+                                                nibName: "Settings",
                                                 tabBarImage: UIImage(systemName: "gearshape"),
                                                 tabBarTitle:  "Settings")
         let tabBarVC = UITabBarController()
         tabBarVC.tabBar.barStyle = .black
-        tabBarVC.setViewControllers([chatNavVC, settingsNavVC], animated: true)
+        tabBarVC.setViewControllers([contactVC, chatNavVC, settingsNavVC], animated: true)
         changeCurrentVC(vc: tabBarVC)
     }
     
@@ -83,11 +92,13 @@ class RouterViewController: UIViewController, RouterProtocol {
         current = newVC
     }
     
-    private func createNavigaionVC(vc newVC: UIViewController, tabBarImage: UIImage?, tabBarTitle: String?) -> UINavigationController {
+    private func createNavigaionVC(vc newVC: UIViewController,nibName: String?, tabBarImage: UIImage?, tabBarTitle: String?) -> UINavigationController {
        
-        let navVC = UINavigationController(rootViewController: newVC)
+        let navVC = UINavigationController(nibName: nibName, bundle: nil)
+        navVC.setViewControllers([newVC], animated: true)
         navVC.modalPresentationStyle = .fullScreen
         navVC.navigationBar.barStyle = .black
+        
         
         if let tabBarImage = tabBarImage {
             navVC.tabBarItem.image = tabBarImage

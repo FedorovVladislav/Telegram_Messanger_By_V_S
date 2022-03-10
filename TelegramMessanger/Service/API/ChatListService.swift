@@ -2,24 +2,13 @@ import Foundation
 import TdlibKit
 
 protocol ChatListDelegate {
-   // func updateChatList(chatDic: [Int64: ChatModel], chatPos: [ChatPositionlist] )
     func updateData (update: Update)
 }
-//
-//struct ChatPositionlist {
-//    var chatId: Int64
-//    var position: Int64
-//
-//    init(chatId: Int64, position:Int64) {
-//        self.chatId = chatId
-//        self.position = position
-//    }
-//}
+
 
 class ChatListService {
     let api: TdApi
     var delegate: ChatListDelegate?
-    
     var photoPath: [Int64:String] =  [:]
     
     // MARK: - Init

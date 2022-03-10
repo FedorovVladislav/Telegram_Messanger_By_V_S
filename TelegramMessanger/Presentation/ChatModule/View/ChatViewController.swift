@@ -11,11 +11,13 @@ import MessageKit
 import InputBarAccessoryView
 
 class ChatViewController: MessagesViewController {
+    
+    //MARK: - UIElement
     private(set) lazy var refreshControl: UIRefreshControl = {
         let control = UIRefreshControl()
         control.tintColor = .white
         control.addTarget(self, action: #selector(loadMoreMessages), for: .valueChanged)
-        
+      
         return control
     }()
     private let profileImageBarItem: UIBarButtonItem = {
@@ -26,6 +28,8 @@ class ChatViewController: MessagesViewController {
         
         return barButtonImage
     }()
+    
+    //MARK: - Data
     var presenter: ChatPresenterProtocol!
     var senderId: Int64?
     var chatTitle: String = "" {
@@ -35,28 +39,20 @@ class ChatViewController: MessagesViewController {
     }
     var chatImagePath: String = "" {
         didSet {
-//            guard let image = UIImage(contentsOfFile: chatImagePath)  else {
-//                print ("***** cant get image *******")
-//                return
-//            }
-//            print ("***** get  image *******")
-            //profileImageBarItem.width = 38
-            
-            //profileImageBarItem.image = image
-            //profileImageBarItem.frame = CGRect(x: 0.0, y: 0.0, width: 38, height: 30)
            setUpProfileButton(imagePath: chatImagePath)
         }
     }
     private var messages: [MessageModel] = []
-
+    
+    //MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
         self.senderId = presenter.networkLayer.getSenderID()
         setupMessagesCollectionView()
         setupMessageInputBar()
-       // navigationItem.rightBarButtonItem = profileImageBarItem
     }
     
+    //MARK: - SetupUI
     private func removeMessageAvatars() {
         guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else { return }
         
@@ -93,7 +89,7 @@ class ChatViewController: MessagesViewController {
         messageInputBar.backgroundView.backgroundColor = .black
     }
     
-    func setUpProfileButton(imagePath: String) {
+    private func setUpProfileButton(imagePath: String) {
         guard let profileImage = UIImage(contentsOfFile: imagePath) else { return }
         
         let profileButton = UIButton(type: .custom)
@@ -109,32 +105,32 @@ class ChatViewController: MessagesViewController {
             profileBarItem.customView!.heightAnchor.constraint(equalToConstant: 40)
         ])
 
-//        let currWidth = profileBarItem.customView?.widthAnchor.constraint(equalToConstant: 40)
-//        currWidth?.isActive = true
-//        let currHeight = profileBarItem.customView?.heightAnchor.constraint(equalToConstant: 40)
-//        currHeight?.isActive = true
         navigationItem.rightBarButtonItem = profileBarItem
     }
-    @objc private func openProfile(){
-         print ("***** Open Profile *******")
+    
+    //MARK: - Button Action
+    @objc private func openProfile() {
+        print ("***** Open Profile *******")
      }
-    @objc private func loadMoreMessages(){
-         print ("***** loadMoreMessages *******")
+    @objc private func loadMoreMessages() {
+        presenter.loadMoreMessage()
      }
 }
 
+    //MARK: - MessagesDataSource
 extension ChatViewController: MessagesDataSource {
     
     func currentSender() -> SenderType {
         return SenderTypeModel(senderId: senderId ?? 0)
     }
+    
     func isFromCurrentSender(message: MessageType) -> Bool {
         guard let senderId = senderId else { return false }
         return message.sender.senderId == "\(senderId)" ? true : false
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        messages[indexPath.section]
+        return  messages[indexPath.section]
     }
     
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
@@ -142,6 +138,7 @@ extension ChatViewController: MessagesDataSource {
     }
 }
 
+    //MARK: - MessagesLayoutDelegate
 extension ChatViewController: MessagesLayoutDelegate {
     func footerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
         return CGSize(width: 0, height: 8)
@@ -152,6 +149,7 @@ extension ChatViewController: MessagesLayoutDelegate {
     }
 }
 
+    //MARK: - MessagesDisplayDelegate
 extension ChatViewController: MessagesDisplayDelegate {
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         return isFromCurrentSender(message: message) ?  .systemBlue : .darkGray
@@ -167,9 +165,9 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 }
 
+    //MARK: - InputBarAccessoryViewDelegate
 extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        print( "***** didPressSendButtonWith ****")
         inputBar.inputTextView.text = ""
         presenter.sendMessage(text: text)
     }
@@ -187,12 +185,19 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     }
 }
 
+    //MARK: - ChatViewProtocol
 extension ChatViewController: ChatViewProtocol {
-   
-   
     func showMessahe(data: [MessageModel]) {
+        let indexScrolTo = data.count - self.messages.count
+        
         self.messages = data
         messagesCollectionView.reloadData()
-        messagesCollectionView.scrollToLastItem()
+        if refreshControl.isRefreshing {
+            messagesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 20), at: .top, animated: false)
+        } else {
+            messagesCollectionView.scrollToLastItem()
+        }
+        refreshControl.endRefreshing()
     }
 }
+ 

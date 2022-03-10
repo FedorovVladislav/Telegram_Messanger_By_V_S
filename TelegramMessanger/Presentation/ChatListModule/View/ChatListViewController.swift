@@ -41,10 +41,10 @@ class ChatListViewController: UIViewController {
     }()
     
     //MARK: - Variables
-    
     var presenter: ChatListPresenter!
     var chatDic: [ChatModel]?
     
+    //MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Chats"
@@ -87,7 +87,7 @@ class ChatListViewController: UIViewController {
     }
 }
 
-//MARK: - ChatListViewProtocol
+    //MARK: - ChatListViewProtocol
 extension ChatListViewController: ChatListViewProtocol {
     func updateTableList(chatList: [ChatModel]) {
         self.chatDic = chatList
@@ -98,7 +98,7 @@ extension ChatListViewController: ChatListViewProtocol {
     }
 }
 
-//MARK: -  UITableViewDataSource, UITableViewDelegate
+    //MARK: -  UITableViewDataSource, UITableViewDelegate
 extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
    
@@ -144,7 +144,7 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
             
         case .some(.messageLocation(_)):
             cell.lastMessage.text = "messageLocation"
-            
+                
         case .some(.messageContact(_)):
             cell.lastMessage.text = "messageContact"
             
@@ -170,7 +170,8 @@ extension ChatListViewController : UITableViewDataSource, UITableViewDelegate {
                 print ("****** GetImagefromPath ****)")
                 cell.contactImage.image = photo
             }
-           
+        } else {
+            cell.contactImage.image = UIImage(systemName: "person.2.fill")
         }
         return cell
     }

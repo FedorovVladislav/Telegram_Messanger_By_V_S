@@ -11,8 +11,8 @@ import UIKit
 protocol NetworkServiceProtocol {
     func updateData(update: Update)
 }
-protocol authStateDelegate {
-    func authStare(state: Bool)
+protocol AuthStateDelegate {
+    func authState(state: Bool)
 }
 
 class AuthService {
@@ -21,7 +21,7 @@ class AuthService {
     
     private let api: TdApi
     private var authorizationState: AuthorizationState?
-    var authDelegate: authStateDelegate?
+    var authDelegate: AuthStateDelegate?
     
     // MARK: - Public properties
    
@@ -48,8 +48,8 @@ class AuthService {
     }
     
     func loggOff() {
-            try! api.logOut(completion: { result in })
-        }
+        try! api.logOut(completion: { result in })
+    }
     
     private func authorizationStateWaitTdlibParameters() {
         do {
@@ -101,7 +101,7 @@ class AuthService {
             authorizationStateWaitEncryptionKey()
 
         case .authorizationStateWaitPhoneNumber:
-            self.authDelegate?.authStare(state: false)
+            self.authDelegate?.authState(state: false)
    
         case .authorizationStateWaitCode(_):
             break
@@ -116,20 +116,20 @@ class AuthService {
             break
    
         case .authorizationStateReady:
-            self.authDelegate?.authStare(state: true)
+            self.authDelegate?.authState(state: true)
    
         case .authorizationStateLoggingOut:
-            self.authDelegate?.authStare(state: false)
+            self.authDelegate?.authState(state: false)
    
         case .authorizationStateClosing:
             break
    
         case .authorizationStateClosed:
-            self.authDelegate?.authStare(state: false)
+            self.authDelegate?.authState(state: false)
         }
     }
 }
-
+    // MARK: - UpdateListeners
 extension AuthService: UpdateListeners {
     func updateData(update: Update) {
         if case .updateAuthorizationState(let state) = update {
