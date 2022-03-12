@@ -1,6 +1,8 @@
 import Foundation
 import TdlibKit
 import CoreMIDI
+import MessageKit
+import UIKit
 
 protocol ChatViewProtocol: AnyObject {
     func showMessahe(data: [MessageModel])
@@ -10,32 +12,33 @@ protocol ChatViewProtocol: AnyObject {
 
 protocol ChatPresenterProtocol: AnyObject {
     init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chat: ChatModel)
-    func sendMessage(text: String)
     var router: RouterProtocol  { get }
     var networkLayer: ChatService { get }
+    func sendMessage(text: String)
     func loadMoreMessage()
 }
 
 class ChatPresenter: ChatPresenterProtocol {
-    func presentedMessage(id: Int64) {
-        if case .messagePhoto(let content) = messageList[id]?.content {
-            print("**** PhotoContent \(content)")
-        }
-    }
-    
+ 
+    //MARK: - Data
     weak var view: ChatViewProtocol?
     let router: RouterProtocol
     let networkLayer: ChatService
     var chatId: Int64
-    var messageList = [Int64: Message]()
- 
+    var messages = [Int64: MessageModel]()
+    let loadingFileManager: LoadingFileManager
+    
+    //MARK: - Init
     required init(view: ChatViewProtocol, router: RouterProtocol, networkLayer: ChatService, chat: ChatModel) {
         self.view = view
         self.router = router
         self.networkLayer = networkLayer
         self.chatId = chat.chatId
-        if let lastMess = chat.lastMessage {
-            self.messageList[lastMess.id] = lastMess
+        self.loadingFileManager = LoadingFileManager(networkLayer: networkLayer)
+        
+        if let message = chat.lastMessage {
+            updateMessageForView(message: message)
+            view.showMessahe(data: prepairDataForModel())
         }
         
         if let title = chat.title {
@@ -46,76 +49,91 @@ class ChatPresenter: ChatPresenterProtocol {
             self.view?.chatImagePath  =  profileImagePath
         }
         
+        loadingFileManager.delegate = self
         networkLayer.delegate = self
         networkLayer.getChatMess(chatId: chatId, lastMess: chat.lastMessage?.id)
     }
     
-    deinit {
-        print("****** ChatViewController deinit *******")
-    }
-    
+    //MARK: - ChatPresenterProtocol
     func sendMessage(text: String) {
         networkLayer.sendMess(chatId: chatId, text: text)
     }
     
-    private func prepairDataForModel(messageList: [Int64: Message]) -> [MessageModel] {
-        var result: [MessageModel] = []
-        
-        for (id, message) in messageList {
-            var text = "Content"
-            if case .messageText(let content) = message.content {
-                text = content.text.text
-            }
-            if case .messagePhoto(let content) = message.content {
-                if let photo = content.photo.sizes.first {
-                    if photo.photo.local.isDownloadingCompleted {
-                        text = "Downloaded"
-                    } else {
-                        text = "start loading"
-                        networkLayer.downloadImage(remoteId: photo.photo.remote.id)
-                    }
-                } else {
-                    text = "No Photo"
-                }
-               
-            }
-            var  senderId: Int64 = 0
-            if case .messageSenderUser(let sender) = message.senderId {
-                senderId = sender.userId
-            }
-            
-            result.append(MessageModel(id: id, text: text, userId: senderId))
-        }
-        result.sort { $0.id < $1.id }
-        return result
-    }
-    
     func loadMoreMessage() {
-        var lastId: Int64 = messageList.first?.key ?? 0
-        for message in messageList {
+        var lastId: Int64 = messages.first?.key ?? 0
+        for message in messages {
             if message.key < lastId {
                 lastId = message.key
             }
         }
         networkLayer.getChatMess(chatId: chatId, lastMess: lastId)
     }
+    
+    //MARK: - Work with data
+    private func prepairDataForModel() -> [MessageModel] {
+        var result: [MessageModel] = []
+        
+        for (_, message) in messages {
+            result.append(message)
+        }
+        result.sort { $0.id < $1.id }
+        return result
+    }
+    
+    private func updateMessagesData( messageID: Int64, text: MessageKind, userId: Int64?) {
+        if messages[messageID] == nil {
+            messages[messageID] = MessageModel(id: messageID, text: text, userId: userId ?? 0)
+        } else {
+            messages[messageID]!.kind = text
+        }
+    }
+    
+    func updateMessageForView(message: Message) {
+        
+        var messageContent = MessageKind.text("Content")
+        
+        if case .messageText(let content) = message.content {
+            messageContent = MessageKind.text(content.text.text)
+        }
+        
+        if case .messagePhoto(let content) = message.content {
+            if let photo = content.photo.sizes.first {
+                if photo.photo.local.isDownloadingCompleted {
+                    if let image = UIImage(contentsOfFile: photo.photo.local.path) {
+                        messageContent = .photo(PhotoMedia(image: image, size: image.size))
+                    }
+                } else {
+                    messageContent = MessageKind.photo(PhotoMedia())
+                    loadingFileManager.startLoading(uniqId:  message.id, file: photo.photo)
+                }
+            }
+        }
+        
+        var  senderId: Int64 = 0
+        if case .messageSenderUser(let sender) = message.senderId {
+            senderId = sender.userId
+        }
+        updateMessagesData(messageID: message.id, text: messageContent, userId: senderId)
+    }
 }
 
-extension ChatPresenter: messDataDelegate {
+    //MARK: - ChatServiceDelegate
+extension ChatPresenter: ChatServiceDelegate {
+    
     func updateData(update: Update) {
         switch update {
             
         case .updateChatLastMessage(let updateChatLastMessage):
             print("******** updateChatLastMessage *******")
-            
             guard let message = updateChatLastMessage.lastMessage else { return }
-            updateNewMessageDelegate(chatId: updateChatLastMessage.chatId, message: [message])
-        
+            updateMessageForView(message: message)
+            view?.showMessahe(data: prepairDataForModel())
+
         /// A new message was received; can also be an outgoing message
         case .updateNewMessage(let updateNewMessage):
-            print("******** updateNewMessage \(updateNewMessage)*******")
-            
-            updateNewMessageDelegate(chatId: updateNewMessage.message.chatId, message: [updateNewMessage.message])
+            print("******** updateNewMessage *******")
+            updateMessageForView(message: updateNewMessage.message)
+            view?.showMessahe(data: prepairDataForModel())
             
         /// A request to send a message has reached the Telegram server. This doesn't mean that the message will be sent successfully or even that the send message request will be processed. This update will be sent only if the option "use_quick_ack" is set to true. This update may be sent multiple times for the same message
         case .updateMessageSendAcknowledged(let updateMessageSendAcknowledged):
@@ -152,6 +170,13 @@ extension ChatPresenter: messDataDelegate {
             print("******** updateUser \(updateUser)*******")
             
 
+        case .updateFile(let file):
+            print("******** updateFile \(file)*******")
+            
+            if file.file.local.isDownloadingCompleted {
+                loadingFileManager.updateData(newFile: file.file)
+            }
+            
         default:
             break
         }
@@ -160,11 +185,18 @@ extension ChatPresenter: messDataDelegate {
     func updateNewMessageDelegate(chatId: Int64, message messages: [Message]) {
         if chatId == self.chatId {
             for message in messages {
-              //  print("******** message \(message) *******")
-                
-                messageList[message.id] = message
+                updateMessageForView(message: message)
             }
-            view?.showMessahe(data: prepairDataForModel(messageList: messageList))
+            view?.showMessahe(data: prepairDataForModel())
         }
+    }
+}
+
+    //MARK: - LoadingFileManagerDelegate
+extension ChatPresenter: LoadingFileManagerDelegate {
+    func loadingComplite(uniqId: Int64, file: File) {
+        guard let photo = UIImage(contentsOfFile: file.local.path) else { return }
+        updateMessagesData(messageID: uniqId, text: .photo(PhotoMedia(image: photo, size: photo.size)), userId: nil)
+        view?.showMessahe(data: prepairDataForModel())
     }
 }

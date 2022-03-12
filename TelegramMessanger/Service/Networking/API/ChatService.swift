@@ -3,13 +3,13 @@ import TdlibKit
 import CoreImage
 import UIKit
 
-protocol messDataDelegate {
-    func updateData (update: Update)
+protocol ChatServiceDelegate {
+    func updateData(update: Update)
     func updateNewMessageDelegate(chatId: Int64, message: [Message])
 }
 
 class ChatService {
-    var delegate:  messDataDelegate?
+    var delegate:  ChatServiceDelegate?
     let api: TdApi
     let telegramService: TelegramService
 
@@ -43,7 +43,7 @@ class ChatService {
                 guard let data = try! result.get().messages else { return }
 
                 self?.delegate?.updateNewMessageDelegate(chatId: chatId, message: data)
-               // self?.mess =  data
+  
             case .failure(_):
                 print("******  failure *******")
             }
@@ -52,36 +52,17 @@ class ChatService {
     
     func downloadImage(remoteId: String?) {
 
-        try!  api.getRemoteFile(fileType:  FileType.fileTypePhoto, remoteFileId: remoteId ?? "", completion: {
-            res in
-                      print("****** getRemoteFile:  \(res) ")
+        try!  api.getRemoteFile(fileType:  FileType.fileTypePhoto, remoteFileId: remoteId ?? "", completion: { result in
+            print("****** getRemoteFile:  \(result) ")
             
-            switch res {
-                
+            switch result {
             case .success(let data):
-                try! self.api.downloadFile(fileId: data.id, limit:0, offset: 0, priority: 32, synchronous: false, completion: {res in
-                  
-                    switch res{
-                
-                    case .success( let data):
-                        print("****** downloadFile success:  \(data) ")
-                        if data.local.isDownloadingCompleted {
-                       //     self.photoPath[userID] = data.local.path
-                            print("****** photoPath   ")
-                        }
-                    case .failure(_):
-                        break
-                    }
-                })
+                try! self.api.downloadFile(fileId: data.id, limit:0, offset: 0, priority: 32, synchronous: false, completion: {_ in })
             case .failure(_):
                 break
             }
-            
         })
-        
-       
-    
-}
+    }
 }
 
 extension ChatService: UpdateListeners {

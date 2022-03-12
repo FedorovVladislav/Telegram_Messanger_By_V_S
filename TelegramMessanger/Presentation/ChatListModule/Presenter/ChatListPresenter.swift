@@ -21,6 +21,8 @@ protocol ChatListPresenterProtocol: AnyObject {
 }
 
 class ChatListPresenter: ChatListPresenterProtocol {
+    
+    //MARK: - Data
     weak var view: ChatListViewProtocol?
     let router: RouterProtocol
     let networkLayer: ChatListService
@@ -30,6 +32,7 @@ class ChatListPresenter: ChatListPresenterProtocol {
     let dispatchGroup  = DispatchGroup()
     var countTask = 0
     
+    //MARK: - Init
     required init(view: ChatListViewProtocol, router: RouterProtocol, networkLayer: ChatListService) {
         self.view = view
         self.router = router
@@ -38,6 +41,7 @@ class ChatListPresenter: ChatListPresenterProtocol {
         networkLayer.delegate = self
     }
     
+    //MARK: - ChatListPresenterProtocol
     func getContact() {
         networkLayer.getContact()
     }
@@ -46,6 +50,7 @@ class ChatListPresenter: ChatListPresenterProtocol {
         router.chatVC(chat: chat)
     }
     
+    //MARK: - Work with data
     private func prepairDataForModel(chatList: [Int64: ChatModel]) -> [ChatModel] {
         var result: [ChatModel] = []
         
@@ -63,11 +68,7 @@ class ChatListPresenter: ChatListPresenterProtocol {
         return result
     }
     
-    private func updateChatDict(chatId: Int64,
-                                title: String?,
-                                lastMessage: Message?,
-                                chatPosition: ChatPosition?,
-                                photoPath: String?) {
+    private func updateChatDict(chatId: Int64, title: String?, lastMessage: Message?, chatPosition: ChatPosition?, photoPath: String?) {
         
         if chatDic[chatId] == nil {
             chatDic[chatId] = ChatModel(chatId: chatId, title: title, lastMessage: lastMessage, photoInfoPath: photoPath, chatPosition: chatPosition)
@@ -94,6 +95,7 @@ class ChatListPresenter: ChatListPresenterProtocol {
     }
 }
 
+    //MARK: - ChatListDelegate
 extension ChatListPresenter: ChatListDelegate {
     func updateData(update: Update) {
         
@@ -102,7 +104,7 @@ extension ChatListPresenter: ChatListDelegate {
         /// A new chat has been loaded/created. This update is guaranteed to come before the chat identifier is returned to the application. The chat field changes will be reported through separate updates
         case .updateNewChat(let newChat):
             var photoPathTemp: String?
-            if let photo = newChat.chat.photo?.small{
+            if let photo = newChat.chat.photo?.small {
                 
                 if  photo.local.isDownloadingCompleted {
                     print("******** photo.local.isDownloadingCompleted \(photo.local.path)")
@@ -117,12 +119,10 @@ extension ChatListPresenter: ChatListDelegate {
             serialQueue.async(group: dispatchGroup) {
             
                 self.updateChatDict(chatId: newChat.chat.id,
-                               title: newChat.chat.title,
-                               lastMessage: newChat.chat.lastMessage,
-                               chatPosition: newChat.chat.positions.first,
-                                photoPath: photoPathTemp
-                )
-              
+                                    title: newChat.chat.title,
+                                    lastMessage: newChat.chat.lastMessage,
+                                    chatPosition: newChat.chat.positions.first,
+                                    photoPath: photoPathTemp)
             }
             
         /// The title of a chat was changed
@@ -144,10 +144,10 @@ extension ChatListPresenter: ChatListDelegate {
             serialQueue.async(group: dispatchGroup) {
                 
                 self.updateChatDict(chatId: updateChatLastMessage.chatId,
-                           title: nil,
-                           lastMessage: updateChatLastMessage.lastMessage,
-                                    chatPosition: updateChatLastMessage.positions.first, photoPath: nil
-                )
+                                    title: nil,
+                                    lastMessage: updateChatLastMessage.lastMessage,
+                                    chatPosition: updateChatLastMessage.positions.first,
+                                    photoPath: nil)
             }
 
         /// The position of a chat in a chat list has changed. Instead of this update updateChatLastMessage or updateChatDraftMessage might be sent
@@ -159,10 +159,10 @@ extension ChatListPresenter: ChatListDelegate {
             serialQueue.async(group: dispatchGroup) {
                
                 self.updateChatDict(chatId: updateChatPosition.chatId,
-                           title: nil,
-                           lastMessage:  nil,
+                                    title: nil,
+                                    lastMessage: nil,
                                     chatPosition: updateChatPosition.position,
-                                    photoPath:nil)
+                                    photoPath: nil)
             }
             
         /// The default message sender that is chosen to send messages in a chat has changed
@@ -225,6 +225,7 @@ extension ChatListPresenter: ChatListDelegate {
         /// The number of online group members has changed. This update with non-zero count is sent only for currently opened chats. There is no guarantee that it will be sent just after the count has changed
         case .updateChatOnlineMemberCount(let updateChatOnlineMemberCount):
             print("***** updateChatOnlineMemberCount *******")
+            
         default:
             break
         }

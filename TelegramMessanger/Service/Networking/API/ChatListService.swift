@@ -60,12 +60,8 @@ class ChatListService {
             case .failure(_):
                 break
             }
-            
         })
-        
-       
-    
-}
+    }
 }
 
 extension ChatListService: UpdateListeners {
