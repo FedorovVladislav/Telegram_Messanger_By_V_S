@@ -74,6 +74,7 @@ class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        messagesCollectionView.messageCellDelegate = self
         
         messagesCollectionView.backgroundColor = .black
         messagesCollectionView.refreshControl = refreshControl
@@ -200,4 +201,20 @@ extension ChatViewController: ChatViewProtocol {
         refreshControl.endRefreshing()
     }
 }
+
+extension ChatViewController: MessageCellDelegate {
+    func didTapMessage(in cell: MessageCollectionViewCell) {
+        
+    }
+    func didTapImage(in cell: MessageCollectionViewCell) {
+
+        print("******** didTapImage ******** ")
+        guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
+        if case .photo(let content) =  messages[indexPath.section].kind {
+            guard let image = content.image else { return }
+            presenter.viewConetnt(message: image)
+        }
+    }
+}
  
+

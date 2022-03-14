@@ -16,6 +16,7 @@ protocol AssemblyBuilderProtocol {
     func createChatListModule(router: RouterProtocol) -> UIViewController
     func createChatModule(router: RouterProtocol, chat: ChatModel) -> UIViewController
     func createSettingsModule(router: RouterProtocol) -> UIViewController
+    func createContentView(router: RouterProtocol, content: UIImage) -> UIViewController
 }
 
 class AssemblyModelBuilder: AssemblyBuilderProtocol {
@@ -62,5 +63,11 @@ class AssemblyModelBuilder: AssemblyBuilderProtocol {
         let presenter = ChatListPresenter(view: view, router: router, networkLayer: serviceManager.chatListService)
         view.presenter = presenter
         return  view
+    }
+    
+    func createContentView(router: RouterProtocol, content: UIImage) -> UIViewController {
+        let view = ContentViewViewController()
+        view.imageView.image = content
+        return view
     }
 }

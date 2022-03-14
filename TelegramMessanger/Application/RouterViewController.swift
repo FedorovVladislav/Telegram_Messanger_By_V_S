@@ -13,6 +13,7 @@ protocol RouterProtocol: Router {
     func chatListVC()
     func popBack()
     func chatVC(chat: ChatModel)
+    func contentView(conetnt: UIImage)
     //func settingVC()
     func start()
 }
@@ -44,6 +45,16 @@ class RouterViewController: UIViewController, RouterProtocol {
         let vc = appBuilder.createChatModule(router: self, chat: chat)
         
         for nv in self.current.children {
+            if nv.nibName == "Chats" {
+                nv.show(vc, sender: nil)
+            }
+        }
+    }
+    
+    func contentView(conetnt: UIImage) {
+        let vc = appBuilder.createContentView(router: self, content: conetnt)
+        for nv in self.current.children {
+            print ("**** Find Navig VC ****")
             if nv.nibName == "Chats" {
                 nv.show(vc, sender: nil)
             }

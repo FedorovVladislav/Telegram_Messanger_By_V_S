@@ -16,6 +16,7 @@ protocol ChatPresenterProtocol: AnyObject {
     var networkLayer: ChatService { get }
     func sendMessage(text: String)
     func loadMoreMessage()
+    func viewConetnt(message: UIImage)
 }
 
 class ChatPresenter: ChatPresenterProtocol {
@@ -69,6 +70,10 @@ class ChatPresenter: ChatPresenterProtocol {
         networkLayer.getChatMess(chatId: chatId, lastMess: lastId)
     }
     
+    func viewConetnt(message: UIImage) {
+        router.contentView(conetnt: message)
+    }
+    
     //MARK: - Work with data
     private func prepairDataForModel() -> [MessageModel] {
         var result: [MessageModel] = []
@@ -97,7 +102,7 @@ class ChatPresenter: ChatPresenterProtocol {
         }
         
         if case .messagePhoto(let content) = message.content {
-            if let photo = content.photo.sizes.first {
+            if let photo = content.photo.sizes.last {
                 if photo.photo.local.isDownloadingCompleted {
                     if let image = UIImage(contentsOfFile: photo.photo.local.path) {
                         messageContent = .photo(PhotoMedia(image: image, size: image.size))
